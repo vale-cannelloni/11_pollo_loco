@@ -3,6 +3,7 @@ class Character extends MovableObject {
   width = 150;
   y = 130;
   x = 50;
+  speed = 5;
   IMAGES_WALKING = [
     "./media/2_character_pepe/2_walk/W-21.png",
     "./media/2_character_pepe/2_walk/W-22.png",
@@ -11,6 +12,7 @@ class Character extends MovableObject {
     "./media/2_character_pepe/2_walk/W-25.png",
     "./media/2_character_pepe/2_walk/W-26.png",
   ];
+  world;
   currentImage = 0;
   constructor() {
     super().loadImage("./media/2_character_pepe/2_walk/W-21.png");
@@ -20,10 +22,24 @@ class Character extends MovableObject {
   }
   animate() {
     setInterval(() => {
-      let i = this.currentImage % this.IMAGES_WALKING.length;
-      let path = this.IMAGES_WALKING[i];
-      this.img = this.imageCache[path];
-      this.currentImage++;
+      if (this.world.keyboard.RIGHT) {
+        this.x += this.speed;
+        this.otherDirection = false;
+      }
+      if (this.world.keyboard.LEFT) {
+        this.x -= this.speed;
+        this.otherDirection = true;
+      }
+      this.world.camera_x = -this.x;
+    }, 1000 / 60);
+
+    setInterval(() => {
+      if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+        let i = this.currentImage % this.IMAGES_WALKING.length;
+        let path = this.IMAGES_WALKING[i];
+        this.img = this.imageCache[path];
+        this.currentImage++;
+      }
     }, 100);
   }
 
