@@ -3,9 +3,9 @@ class MovableObject extends DrawableObject {
   otherDirection = false;
   speedY = 0;
   accelleration = 2.5;
-  offsetY = 0;
   energy = 100;
   lastHit = 0;
+  speedX = 10;
 
   applyGravity() {
     setInterval(() => {
@@ -28,13 +28,28 @@ class MovableObject extends DrawableObject {
     return (
       this.x + this.width >= mo.x &&
       this.x <= mo.x + mo.width &&
-      this.y + this.offsetY + this.height >= mo.y &&
-      this.y + this.offsetY <= mo.y + mo.height
+      this.y + this.height >= mo.y &&
+      this.y <= mo.y + mo.height + mo.offsetYTop
     );
   }
 
-  hit() {
-    this.energy -= 5;
+  isLandingOnTopOf(mo) {
+    let thresholdY = 100;
+    let bottomOfCharacter = this.y + this.height;
+    let topOfEnemy = mo.y;
+
+    let isWithinXBounds =
+      this.x + (this.width - this.offsetX) > mo.x &&
+      this.x + this.offsetX < mo.x + mo.width;
+
+    let isAboveWithThreshold =
+      bottomOfCharacter >= topOfEnemy &&
+      bottomOfCharacter <= topOfEnemy + thresholdY;
+    return isWithinXBounds && isAboveWithThreshold;
+  }
+
+  hit(damage) {
+    this.energy -= damage;
     if (this.energy < 0) {
       this.energy = 0;
     } else {
@@ -67,7 +82,7 @@ class MovableObject extends DrawableObject {
     this.currentImage++;
   }
 
-  jump() {
-    this.speedY = 30;
+  jump(jumpSpeed) {
+    this.speedY = jumpSpeed;
   }
 }

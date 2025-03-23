@@ -4,6 +4,9 @@ class Character extends MovableObject {
   y = 120;
   x = 50;
   speed = 5;
+  offsetYTop = 100;
+  offsetX = 50;
+
   IMAGES_WALKING = [
     "./media/2_character_pepe/2_walk/W-21.png",
     "./media/2_character_pepe/2_walk/W-22.png",
@@ -97,7 +100,7 @@ class Character extends MovableObject {
         (this.world.keyboard.UP || this.world.keyboard.SPACE) &&
         !this.isAboveGround()
       ) {
-        this.jump();
+        this.jump(30);
       }
 
       this.world.camera_x = -this.x + 100;
