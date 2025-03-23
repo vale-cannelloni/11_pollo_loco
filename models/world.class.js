@@ -25,7 +25,7 @@ class World {
     setInterval(() => {
       this.checkCollisions();
       this.checkThrowObjects();
-    }, 200);
+    }, 50);
   }
 
   checkThrowObjects() {
@@ -43,7 +43,6 @@ class World {
       if (this.character.isColliding(enemy) && enemy.energy !== 0) {
         if (this.character.isLandingOnTopOf(enemy)) {
           enemy.hit(100);
-          this.character.jump(10);
         } else {
           this.character.hit(5);
           this.statusBar.setPercentage(this.character.energy);
@@ -90,6 +89,8 @@ class World {
     mo.draw(this.ctx);
 
     mo.drawFrame(this.ctx);
+
+    mo.drawHitBox(this.ctx);
 
     if (mo.otherDirection) {
       this.flipImageBack(mo);

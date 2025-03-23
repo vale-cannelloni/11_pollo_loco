@@ -29,12 +29,12 @@ class MovableObject extends DrawableObject {
       this.x + this.width >= mo.x &&
       this.x <= mo.x + mo.width &&
       this.y + this.height >= mo.y &&
-      this.y <= mo.y + mo.height + mo.offsetYTop
+      this.y <= mo.y + mo.height
     );
   }
 
   isLandingOnTopOf(mo) {
-    let thresholdY = 100;
+    let thresholdY = 50;
     let bottomOfCharacter = this.y + this.height;
     let topOfEnemy = mo.y;
 
@@ -45,7 +45,9 @@ class MovableObject extends DrawableObject {
     let isAboveWithThreshold =
       bottomOfCharacter >= topOfEnemy &&
       bottomOfCharacter <= topOfEnemy + thresholdY;
-    return isWithinXBounds && isAboveWithThreshold;
+    if (isWithinXBounds && isAboveWithThreshold) {
+      return true;
+    }
   }
 
   hit(damage) {
