@@ -15,11 +15,6 @@ class ThrowableObject extends MovableObject {
     "media/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png",
   ];
 
-  IMAGES_GROUND = [
-    "media/6_salsa_bottle/1_salsa_bottle_on_ground.png",
-    "media/6_salsa_bottle/2_salsa_bottle_on_ground.png",
-  ];
-
   constructor(x, y) {
     super().loadImage(
       "media/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png"
