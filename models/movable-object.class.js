@@ -5,7 +5,7 @@ class MovableObject extends DrawableObject {
   accelleration = 2.5;
   energy = 100;
   lastHit = 0;
-  speedX = 10;
+  speedX = 0;
 
   applyGravity() {
     setInterval(() => {
@@ -30,6 +30,15 @@ class MovableObject extends DrawableObject {
       this.x + this.offsetX <= mo.x + mo.width &&
       this.y + this.height >= mo.y &&
       this.y <= mo.y + mo.height
+    );
+  }
+
+  isCollecting(mo) {
+    return (
+      this.x + (this.width - this.offsetX) >= mo.x + mo.offsetX &&
+      this.x + this.offsetX <= mo.x + (mo.width - mo.offsetX) &&
+      this.y + this.height >= mo.y &&
+      this.y + this.offsetYTop <= mo.y + (mo.height - mo.offsetYTop)
     );
   }
 
@@ -67,6 +76,18 @@ class MovableObject extends DrawableObject {
     let timePassed = new Date().getTime() - this.lastHit;
     timePassed = timePassed / 1000;
     return timePassed < 1;
+  }
+
+  pushBack() {
+    if (this.x > 0) {
+      let pushInterval = setInterval(() => {
+        this.x -= 2;
+      }, 50);
+
+      setTimeout(() => {
+        clearInterval(pushInterval);
+      }, 1000);
+    }
   }
 
   moveRight() {

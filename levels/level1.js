@@ -55,5 +55,12 @@ const level1 = new Level(
       "./media/5_background/layers/1_first_layer/1.png",
       719 * 2
     ),
+  ],
+  [
+    new Coin("media/8_coin/coin_2.png", 100, 300),
+    new Coin("media/8_coin/coin_1.png", 400, 300),
+    new Coin("media/8_coin/coin_2.png", 700, 300),
+    new Coin("media/8_coin/coin_1.png", 900, 300),
+    new Coin("media/8_coin/coin_2.png", 1000, 300),
   ]
 );

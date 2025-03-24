@@ -7,6 +7,7 @@ class World {
   camera_x = 0;
   statusBar = new StatusBar();
   throwableObjects = [];
+  coinCount = 0;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -25,6 +26,7 @@ class World {
     setInterval(() => {
       this.checkCollisions();
       this.checkThrowObjects();
+      this.collectCoins();
     }, 50);
   }
 
@@ -46,9 +48,20 @@ class World {
         } else {
           this.character.hit(5);
           this.statusBar.setPercentage(this.character.energy);
+          this.character.pushBack();
         }
       }
     });
+  }
+
+  collectCoins() {
+    for (let i = this.level.coins.length - 1; i >= 0; i--) {
+      let coin = this.level.coins[i];
+      if (this.character.isCollecting(coin)) {
+        this.level.coins.splice(i, 1);
+        this.coinCount = this.coinCount + 1;
+      }
+    }
   }
 
   draw() {
@@ -67,6 +80,7 @@ class World {
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.throwableObjects);
+    this.addObjectsToMap(this.level.coins);
 
     this.ctx.translate(-this.camera_x, 0);
 
