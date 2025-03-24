@@ -6,6 +6,7 @@ class MovableObject extends DrawableObject {
   energy = 100;
   lastHit = 0;
   speedX = 0;
+  jumpSound = new Audio("./media/sound/smb_jump-small.wav");
 
   applyGravity() {
     setInterval(() => {
@@ -110,5 +111,6 @@ class MovableObject extends DrawableObject {
 
   jump(jumpSpeed) {
     this.speedY = jumpSpeed;
+    this.jumpSound.play();
   }
 }

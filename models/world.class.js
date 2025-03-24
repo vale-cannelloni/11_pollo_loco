@@ -10,6 +10,8 @@ class World {
   bottleBar = new BottleBar();
   throwableObjects = [];
   coinCount = 0;
+  coinSound = new Audio("./media/sound/smb_coin.wav");
+  killSound = new Audio("./media/sound/smb_stomp.wav");
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -46,6 +48,7 @@ class World {
     this.level.enemies.forEach((enemy) => {
       if (this.character.isColliding(enemy) && enemy.energy !== 0) {
         if (this.character.isLandingOnTopOf(enemy)) {
+          this.killSound.play();
           enemy.hit(100);
         } else {
           this.character.hit(5);
@@ -60,6 +63,7 @@ class World {
     for (let i = this.level.coins.length - 1; i >= 0; i--) {
       let coin = this.level.coins[i];
       if (this.character.isCollecting(coin)) {
+        this.coinSound.play();
         this.level.coins.splice(i, 1);
         this.coinCount = this.coinCount + 1;
         this.coinBar.setCoinAmount(this.coinCount);
