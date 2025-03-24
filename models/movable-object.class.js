@@ -82,8 +82,11 @@ class MovableObject extends DrawableObject {
     if (this.x > 0) {
       let pushInterval = setInterval(() => {
         this.x -= 2;
+        if (this.x <= 0) {
+          this.x = 0;
+          clearInterval(pushInterval);
+        }
       }, 50);
-
       setTimeout(() => {
         clearInterval(pushInterval);
       }, 1000);

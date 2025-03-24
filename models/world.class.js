@@ -6,6 +6,7 @@ class World {
   keyboard;
   camera_x = 0;
   statusBar = new StatusBar();
+  coinBar = new CoinBar();
   throwableObjects = [];
   coinCount = 0;
 
@@ -60,6 +61,7 @@ class World {
       if (this.character.isCollecting(coin)) {
         this.level.coins.splice(i, 1);
         this.coinCount = this.coinCount + 1;
+        this.coinBar.setCoinAmount(this.coinCount);
       }
     }
   }
@@ -73,6 +75,8 @@ class World {
 
     this.ctx.translate(-this.camera_x, 0);
     this.addToMap(this.statusBar);
+    this.addToMap(this.coinBar);
+
     this.ctx.translate(this.camera_x, 0);
 
     this.addToMap(this.character);
