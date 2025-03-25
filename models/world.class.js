@@ -8,6 +8,7 @@ class World {
   statusBar = new StatusBar();
   coinBar = new CoinBar();
   bottleBar = new BottleBar();
+  bossBar = new BossBar();
   throwableObjects = [];
   coinCount = 0;
   bottleCount = 0;
@@ -40,7 +41,11 @@ class World {
   }
 
   checkThrowObjects() {
-    if (this.keyboard.F && this.bottleCount != 0) {
+    if (
+      this.keyboard.F &&
+      this.bottleCount != 0 &&
+      this.character.energy != 0
+    ) {
       let bottle = new ThrowableObject(
         this.character.x + 100,
         this.character.y + 100
@@ -58,7 +63,7 @@ class World {
         if (this.character.isLandingOnTopOf(enemy)) {
           this.killSound.play();
           enemy.hit(100);
-        } else {
+        } else if (this.character.energy !== 0) {
           this.character.hit(5);
           this.charHit.play();
           this.statusBar.setPercentage(this.character.energy);
@@ -94,16 +99,24 @@ class World {
 
   bottleCollision() {
     this.throwableObjects.forEach((hitter) => {
+      if (hitter.hasHit) return;
+
       this.level.enemies.forEach((enemy) => {
-        if (hitter.isColliding(enemy) && enemy.energy !== 0) {
+        if (hitter.isColliding(enemy) && enemy.energy !== 0 && !hitter.hasHit) {
           this.killSound.play();
           enemy.hit(100);
+          hitter.hasHit = true;
+          hitter.isBroken = true;
         }
       });
+
       this.level.endBoss.forEach((end) => {
-        if (hitter.isColliding(end) && end.energy !== 0) {
+        if (hitter.isColliding(end) && end.energy !== 0 && !hitter.hasHit) {
           this.killSound.play();
-          end.hit(25);
+          end.hit(15);
+          this.bossBar.setPercentage(this.level.endBoss[0].energy);
+          hitter.hasHit = true;
+          hitter.isBroken = true;
         }
       });
     });
@@ -120,6 +133,7 @@ class World {
     this.addToMap(this.statusBar);
     this.addToMap(this.coinBar);
     this.addToMap(this.bottleBar);
+    this.addToMap(this.bossBar);
 
     this.ctx.translate(this.camera_x, 0);
 

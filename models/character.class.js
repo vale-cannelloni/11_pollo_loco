@@ -116,39 +116,25 @@ class Character extends MovableObject {
       this.world.camera_x = -this.x + 100;
     }, 1000 / 60);
 
-    this.animationIdle = setInterval(() => {
-      this.playAnimation(this.IMAGES_IDLE);
-    }, 100);
-    this.animationJump = setInterval(() => {
+    setInterval(() => {
       if (this.isAboveGround()) {
-        clearInterval(this.animationIdle);
         this.playAnimation(this.IMAGES_JUMPING);
-      }
-    }, 100);
-    this.animationHurt = setInterval(() => {
-      if (this.isHurt()) {
-        clearInterval(this.animationIdle);
+      } else if (this.isHurt()) {
         this.playAnimation(this.IMAGES_HURT);
-      }
-    }, 100);
-
-    this.animationWalking = setInterval(() => {
-      if (
+      } else if (
         (this.world.keyboard.RIGHT ||
           this.world.keyboard.LEFT ||
           this.world.keyboard.D ||
           this.world.keyboard.A) &&
         !this.isAboveGround() &&
-        !this.isBeingPushedBack
+        !this.isBeingPushedBack &&
+        !this.isDead()
       ) {
-        clearInterval(this.animationIdle);
         this.playAnimation(this.IMAGES_WALKING);
-      }
-    }, 100);
-    this.animationDead = setInterval(() => {
-      if (this.isDead()) {
-        clearInterval(this.animationWalking);
+      } else if (this.isDead()) {
         this.playAnimation(this.IMAGES_DEAD);
+      } else {
+        this.playAnimation(this.IMAGES_IDLE);
       }
     }, 100);
   }
