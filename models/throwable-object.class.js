@@ -44,6 +44,7 @@ class ThrowableObject extends MovableObject {
         this.x += 10;
       } else {
         clearInterval(this.throwInterval);
+        clearInterval(this.gravityInterval);
       }
     }, 25);
   }
@@ -54,9 +55,10 @@ class ThrowableObject extends MovableObject {
         clearInterval(this.rotateInterval);
         this.playAnimationOnce(this.IMAGES_SPLASH);
       }
-    });
-    this.rotateInterval = setInterval(() => {
+    }, 100);
+    (this.rotateInterval = setInterval(() => {
       this.playAnimation(this.IMAGES_ROTATION);
-    });
+    })),
+      100;
   }
 }

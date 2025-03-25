@@ -9,7 +9,7 @@ class MovableObject extends DrawableObject {
   jumpSound = new Audio("./media/sound/smb_jump-small.wav");
 
   applyGravity() {
-    setInterval(() => {
+    this.gravityInterval = setInterval(() => {
       if (this.isAboveGround() || this.speedY > 0) {
         this.y -= this.speedY;
         this.speedY -= this.accelleration;

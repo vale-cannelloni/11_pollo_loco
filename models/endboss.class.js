@@ -3,6 +3,9 @@ class Endboss extends MovableObject {
   width = this.width * 3.5;
   y = -60;
   energy = 100;
+  isHurting = false;
+  offsetYTop = 100;
+  offsetX = 75;
 
   IMAGES_WALKING = [
     "./media/4_enemie_boss_chicken/1_walk/G1.png",
@@ -56,6 +59,7 @@ class Endboss extends MovableObject {
 
     this.x = 1500;
     this.animate();
+    this.startHurt();
   }
 
   animate() {
@@ -68,5 +72,12 @@ class Endboss extends MovableObject {
         this.playAnimation(this.IMAGES_WALKING);
       }
     }, 100);
+  }
+
+  startHurt() {
+    this.hisHurting = true;
+    setTimeout(() => {
+      this.hisHurting = false;
+    }, 2000);
   }
 }

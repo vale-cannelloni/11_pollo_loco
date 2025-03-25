@@ -41,15 +41,8 @@ class World {
   }
 
   checkThrowObjects() {
-    if (
-      this.keyboard.F &&
-      this.bottleCount != 0 &&
-      this.character.energy != 0
-    ) {
-      let bottle = new ThrowableObject(
-        this.character.x + 100,
-        this.character.y + 100
-      );
+    if (this.keyboard.F && this.bottleCount != 0 && this.character.energy != 0) {
+      let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
       this.throwableObjects.push(bottle);
       this.bottleCount -= 1;
       this.bottleBar.setBottleAmount(this.bottleCount);
@@ -98,28 +91,47 @@ class World {
   }
 
   bottleCollision() {
-    this.throwableObjects.forEach((hitter) => {
-      if (hitter.hasHit) return;
-
-      this.level.enemies.forEach((enemy) => {
-        if (hitter.isColliding(enemy) && enemy.energy !== 0 && !hitter.hasHit) {
+    for (let i = 0; i < this.throwableObjects.length; i++) {
+      let hitter = this.throwableObjects[i];
+      if (hitter.hasHit) continue;
+      for (let indexEnemy = 0; indexEnemy < this.level.enemies.length; indexEnemy++) {
+        let enemy = this.level.enemies[indexEnemy];
+        if (hitter.isCollecting(enemy) && enemy.energy !== 0 && !hitter.hasHit) {
           this.killSound.play();
           enemy.hit(100);
           hitter.hasHit = true;
           hitter.isBroken = true;
+          this.imageRemoval(hitter, this.throwableObjects);
+          break;
         }
-      });
+      }
 
-      this.level.endBoss.forEach((end) => {
-        if (hitter.isColliding(end) && end.energy !== 0 && !hitter.hasHit) {
-          this.killSound.play();
-          end.hit(15);
-          this.bossBar.setPercentage(this.level.endBoss[0].energy);
-          hitter.hasHit = true;
-          hitter.isBroken = true;
+      if (!hitter.hasHit) {
+        for (let indexEnd = 0; indexEnd < this.level.endBoss.length; indexEnd++) {
+          let end = this.level.endBoss[indexEnd];
+
+          if (hitter.isCollecting(end) && end.energy !== 0 && !hitter.hasHit) {
+            this.killSound.play();
+            end.hit(20);
+            this.bossBar.setPercentage(end.energy);
+            hitter.hasHit = true;
+            hitter.isBroken = true;
+
+            this.imageRemoval(hitter, this.throwableObjects);
+            break;
+          }
         }
-      });
-    });
+      }
+    }
+  }
+
+  imageRemoval(imageRemove, removearray) {
+    setTimeout(() => {
+      let indexRemove = removearray.indexOf(imageRemove);
+      if (indexRemove !== -1) {
+        removearray.splice(indexRemove, 1);
+      }
+    }, 1000);
   }
 
   draw() {

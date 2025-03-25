@@ -27,7 +27,7 @@ class DrawableObject {
   drawFrame(ctx) {
     if (
       this instanceof Character ||
-      this instanceof Chicken ||
+      this instanceof Endboss ||
       this instanceof ThrowableObject
     ) {
       ctx.beginPath();
@@ -41,7 +41,7 @@ class DrawableObject {
   drawHitBox(ctx) {
     if (
       this instanceof Character ||
-      this instanceof Chicken ||
+      this instanceof Endboss ||
       this instanceof ThrowableObject
     ) {
       ctx.beginPath();
