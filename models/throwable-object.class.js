@@ -1,4 +1,7 @@
 class ThrowableObject extends MovableObject {
+  offsetYTop = 0;
+  offsetX = 0;
+
   IMAGES_ROTATION = [
     "media/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
     "media/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png",

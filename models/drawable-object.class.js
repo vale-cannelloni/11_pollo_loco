@@ -28,8 +28,7 @@ class DrawableObject {
     if (
       this instanceof Character ||
       this instanceof Chicken ||
-      this instanceof Coin ||
-      this instanceof Bottle
+      this instanceof ThrowableObject
     ) {
       ctx.beginPath();
       ctx.lineWidth = "2";
@@ -43,8 +42,7 @@ class DrawableObject {
     if (
       this instanceof Character ||
       this instanceof Chicken ||
-      this instanceof Coin ||
-      this instanceof Bottle
+      this instanceof ThrowableObject
     ) {
       ctx.beginPath();
       ctx.lineWidth = "2";
