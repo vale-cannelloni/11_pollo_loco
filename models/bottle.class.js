@@ -1,6 +1,6 @@
 class Bottle extends DrawableObject {
   offsetYTop = 20;
-  offsetX = 40;
+  offsetX = 30;
   constructor(imagePath, x) {
     super().loadImage(imagePath);
     this.x = x + Math.random() * 700;

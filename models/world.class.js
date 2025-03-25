@@ -10,8 +10,10 @@ class World {
   bottleBar = new BottleBar();
   throwableObjects = [];
   coinCount = 0;
+  bottleCount = 0;
   coinSound = new Audio("./media/sound/smb_coin.wav");
   killSound = new Audio("./media/sound/smb_stomp.wav");
+  takeSound = new Audio("./media/sound/smb_1-up.wav");
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -31,6 +33,7 @@ class World {
       this.checkCollisions();
       this.checkThrowObjects();
       this.collectCoins();
+      this.collectBottles();
     }, 50);
   }
 
@@ -67,6 +70,18 @@ class World {
         this.level.coins.splice(i, 1);
         this.coinCount = this.coinCount + 1;
         this.coinBar.setCoinAmount(this.coinCount);
+      }
+    }
+  }
+
+  collectBottles() {
+    for (let i = this.level.bottles.length - 1; i >= 0; i--) {
+      let bottle = this.level.bottles[i];
+      if (this.character.isCollecting(bottle)) {
+        this.takeSound.play();
+        this.level.bottles.splice(i, 1);
+        this.bottleCount = this.bottleCount + 1;
+        this.bottleBar.setBottleAmount(this.bottleCount);
       }
     }
   }
