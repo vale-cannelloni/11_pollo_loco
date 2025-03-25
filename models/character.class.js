@@ -6,6 +6,7 @@ class Character extends MovableObject {
   speed = 5;
   offsetYTop = 100;
   offsetX = 50;
+  isBeingPushedBack = false;
 
   IMAGES_WALKING = [
     "./media/2_character_pepe/2_walk/W-21.png",
@@ -87,18 +88,27 @@ class Character extends MovableObject {
     setInterval(() => {
       if (
         (this.world.keyboard.RIGHT || this.world.keyboard.D) &&
-        this.x < this.world.level.level_end_x
+        this.x < this.world.level.level_end_x &&
+        !this.isBeingPushedBack &&
+        !this.isDead()
       ) {
         this.otherDirection = false;
         this.moveRight();
       }
-      if ((this.world.keyboard.LEFT || this.world.keyboard.A) && this.x > 0) {
+      if (
+        (this.world.keyboard.LEFT || this.world.keyboard.A) &&
+        this.x > 0 &&
+        !this.isBeingPushedBack &&
+        !this.isDead()
+      ) {
         this.otherDirection = true;
         this.moveLeft();
       }
       if (
         (this.world.keyboard.UP || this.world.keyboard.SPACE) &&
-        !this.isAboveGround()
+        !this.isAboveGround() &&
+        !this.isBeingPushedBack &&
+        !this.isDead()
       ) {
         this.jump(30);
       }
@@ -106,22 +116,39 @@ class Character extends MovableObject {
       this.world.camera_x = -this.x + 100;
     }, 1000 / 60);
 
-    setInterval(() => {
+    this.animationIdle = setInterval(() => {
       this.playAnimation(this.IMAGES_IDLE);
+    }, 100);
+    this.animationJump = setInterval(() => {
       if (this.isAboveGround()) {
+        clearInterval(this.animationIdle);
         this.playAnimation(this.IMAGES_JUMPING);
-      } else if (
+      }
+    }, 100);
+    this.animationHurt = setInterval(() => {
+      if (this.isHurt()) {
+        clearInterval(this.animationIdle);
+        this.playAnimation(this.IMAGES_HURT);
+      }
+    }, 100);
+
+    this.animationWalking = setInterval(() => {
+      if (
         (this.world.keyboard.RIGHT ||
           this.world.keyboard.LEFT ||
           this.world.keyboard.D ||
           this.world.keyboard.A) &&
-        !this.isAboveGround()
+        !this.isAboveGround() &&
+        !this.isBeingPushedBack
       ) {
+        clearInterval(this.animationIdle);
         this.playAnimation(this.IMAGES_WALKING);
-      } else if (this.isDead()) {
+      }
+    }, 100);
+    this.animationDead = setInterval(() => {
+      if (this.isDead()) {
+        clearInterval(this.animationWalking);
         this.playAnimation(this.IMAGES_DEAD);
-      } else if (this.isHurt()) {
-        this.playAnimation(this.IMAGES_HURT);
       }
     }, 100);
   }

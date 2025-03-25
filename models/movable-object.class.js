@@ -80,18 +80,26 @@ class MovableObject extends DrawableObject {
   }
 
   pushBack() {
-    if (this.x > 0) {
+    if (this.x > 0 && !this.isBeingPushedBack) {
+      this.isBeingPushedBack = true;
+
       let pushInterval = setInterval(() => {
         this.x -= 2;
         if (this.x <= 0) {
           this.x = 0;
           clearInterval(pushInterval);
+          this.isBeingPushedBack = false;
         }
       }, 50);
       setTimeout(() => {
         clearInterval(pushInterval);
+        this.isBeingPushedBack = false;
       }, 1000);
     }
+  }
+
+  stopMovement() {
+    return true;
   }
 
   moveRight() {
@@ -107,6 +115,19 @@ class MovableObject extends DrawableObject {
     let path = images[i];
     this.img = this.imageCache[path];
     this.currentImage++;
+  }
+
+  playAnimationOnce(images) {
+    let i = 0;
+    this.animationInterval = setInterval(() => {
+      let path = images[i];
+      this.img = this.imageCache[path];
+      i++;
+      if (i > images.length) {
+        clearInterval(this.animationInterval);
+        this.img = this.imageCache[images[images.length - 1]];
+      }
+    }, 100);
   }
 
   jump(jumpSpeed) {

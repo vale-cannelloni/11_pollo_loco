@@ -14,6 +14,7 @@ class World {
   coinSound = new Audio("./media/sound/smb_coin.wav");
   killSound = new Audio("./media/sound/smb_stomp.wav");
   takeSound = new Audio("./media/sound/smb_kick.wav");
+  charHit = new Audio("./media/sound/smb2_damage.wav");
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -59,6 +60,7 @@ class World {
           enemy.hit(100);
         } else {
           this.character.hit(5);
+          this.charHit.play();
           this.statusBar.setPercentage(this.character.energy);
           this.character.pushBack();
         }
@@ -98,6 +100,12 @@ class World {
           enemy.hit(100);
         }
       });
+      this.level.endBoss.forEach((end) => {
+        if (hitter.isColliding(end) && end.energy !== 0) {
+          this.killSound.play();
+          end.hit(25);
+        }
+      });
     });
   }
 
@@ -122,6 +130,7 @@ class World {
     this.addObjectsToMap(this.throwableObjects);
     this.addObjectsToMap(this.level.coins);
     this.addObjectsToMap(this.level.bottles);
+    this.addObjectsToMap(this.level.endBoss);
 
     this.ctx.translate(-this.camera_x, 0);
 
