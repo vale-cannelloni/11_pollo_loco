@@ -2,10 +2,36 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 let keyboardActive = true;
+let gameState = "start";
+
+//start
+//playing
+//gameover
+
+document.addEventListener("keydown", function (e) {
+  if (gameState === "start" && e.key === "Enter") {
+    gameState = "playing";
+    init();
+  }
+
+  if (gameState === "gameover" && e.key.toLowerCase() === "r") {
+    gameState = "start";
+    initStart();
+  }
+});
 
 function init() {
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
+}
+function initStart() {
+  canvas = document.getElementById("canvas");
+  world = new StartScreen(canvas, keyboard);
+}
+
+function initOver() {
+  canvas = document.getElementById("canvas");
+  world = new GameOverScreen(canvas, keyboard);
 }
 
 window.addEventListener("keydown", (e) => {
