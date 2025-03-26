@@ -7,6 +7,12 @@ class Character extends MovableObject {
   offsetYTop = 100;
   offsetX = 50;
   isBeingPushedBack = false;
+  blockMoves = false;
+  stepsSound = new Audio("https://noproblo.dayjo.org/zeldasounds/OOT/OOT_Steps_Dirt6.wav");
+  gameOver = new Audio("./media/sound/smb_mariodie.wav");
+  deathStarted = false;
+  deathAnimationPlayed = false;
+  deathImage = new Image();
 
   IMAGES_WALKING = [
     "./media/2_character_pepe/2_walk/W-21.png",
@@ -35,7 +41,6 @@ class Character extends MovableObject {
     "./media/2_character_pepe/5_dead/D-54.png",
     "./media/2_character_pepe/5_dead/D-55.png",
     "./media/2_character_pepe/5_dead/D-56.png",
-    "./media/2_character_pepe/5_dead/D-57.png",
   ];
 
   IMAGES_HURT = [
@@ -89,30 +94,22 @@ class Character extends MovableObject {
       if (
         (this.world.keyboard.RIGHT || this.world.keyboard.D) &&
         this.x < this.world.level.level_end_x &&
-        !this.isBeingPushedBack &&
-        !this.isDead()
+        this.blockMovesVar()
       ) {
         this.otherDirection = false;
         this.moveRight();
       }
-      if (
-        (this.world.keyboard.LEFT || this.world.keyboard.A) &&
-        this.x > 0 &&
-        !this.isBeingPushedBack &&
-        !this.isDead()
-      ) {
+      if ((this.world.keyboard.LEFT || this.world.keyboard.A) && this.x > 0 && this.blockMovesVar()) {
         this.otherDirection = true;
         this.moveLeft();
       }
       if (
         (this.world.keyboard.UP || this.world.keyboard.SPACE) &&
         !this.isAboveGround() &&
-        !this.isBeingPushedBack &&
-        !this.isDead()
+        this.blockMovesVar()
       ) {
         this.jump(30);
       }
-
       this.world.camera_x = -this.x + 100;
     }, 1000 / 60);
 
@@ -126,16 +123,33 @@ class Character extends MovableObject {
           this.world.keyboard.LEFT ||
           this.world.keyboard.D ||
           this.world.keyboard.A) &&
-        !this.isAboveGround() &&
-        !this.isBeingPushedBack &&
-        !this.isDead()
+        this.blockMovesVar() &&
+        !this.blockMoves
       ) {
         this.playAnimation(this.IMAGES_WALKING);
-      } else if (this.isDead()) {
-        this.playAnimation(this.IMAGES_DEAD);
+        this.stepsSound.play();
+      } else if (this.isDead() && !this.deathAnimationPlayed) {
+        this.gameOver.play();
+
+        if (!this.deathStarted) {
+          this.deathStarted = true;
+          this.deathImage.src = this.IMAGES_DEAD[0];
+          this.img = this.deathImage;
+          setTimeout(() => {
+            this.deathAnimationPlayed = true;
+          }, 1000);
+        }
+      } else if (this.deathAnimationPlayed) {
+        this.playAnimationOnce(this.IMAGES_DEAD);
       } else {
         this.playAnimation(this.IMAGES_IDLE);
       }
     }, 100);
+  }
+
+  blockMovesVar() {
+    if (!this.isBeingPushedBack && !this.isDead() && !this.blockMoves) {
+      return true;
+    }
   }
 }

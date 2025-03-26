@@ -25,11 +25,7 @@ class DrawableObject {
   }
 
   drawFrame(ctx) {
-    if (
-      this instanceof Character ||
-      this instanceof Endboss ||
-      this instanceof ThrowableObject
-    ) {
+    if (this instanceof Character || this instanceof Endboss || this instanceof ThrowableObject) {
       ctx.beginPath();
       ctx.lineWidth = "2";
       ctx.strokeStyle = "blue";
@@ -39,11 +35,7 @@ class DrawableObject {
   }
 
   drawHitBox(ctx) {
-    if (
-      this instanceof Character ||
-      this instanceof Endboss ||
-      this instanceof ThrowableObject
-    ) {
+    if (this instanceof Character || this instanceof Endboss || this instanceof ThrowableObject) {
       ctx.beginPath();
       ctx.lineWidth = "2";
       ctx.strokeStyle = "red";

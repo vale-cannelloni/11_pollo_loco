@@ -12,10 +12,15 @@ class World {
   throwableObjects = [];
   coinCount = 0;
   bottleCount = 0;
+  endbossSound = new Audio(
+    "https://static.wikia.nocookie.net/soundeffects/images/b/b8/Godzilla_1962-1975_SFX.ogg"
+  );
   coinSound = new Audio("./media/sound/smb_coin.wav");
   killSound = new Audio("./media/sound/smb_stomp.wav");
   takeSound = new Audio("./media/sound/smb_kick.wav");
   charHit = new Audio("./media/sound/smb2_damage.wav");
+  bossTrigger = false;
+  triggerBossBar = false;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -28,6 +33,7 @@ class World {
 
   setWorld() {
     this.character.world = this;
+    this.level.endBoss[0].world = this;
   }
 
   run() {
@@ -37,11 +43,35 @@ class World {
       this.collectCoins();
       this.collectBottles();
       this.bottleCollision();
+      this.checkTouch();
     }, 50);
   }
 
+  checkTouch() {
+    this.level.endBoss.forEach((boss) => {
+      if (this.triggerBossBar) {
+        return;
+      } else if (this.character.isCollidingEndboss(boss)) {
+        boss.angry = true;
+        this.triggerBossBar = true;
+        this.character.blockMoves = true;
+        setTimeout(() => {
+          boss.angry = false;
+          this.character.blockMoves = false;
+          this.endbossSound.play();
+        }, 1500);
+        setTimeout;
+      }
+    });
+  }
+
   checkThrowObjects() {
-    if (this.keyboard.F && this.bottleCount != 0 && this.character.energy != 0) {
+    if (
+      this.keyboard.F &&
+      this.bottleCount != 0 &&
+      this.character.energy != 0 &&
+      !this.character.blockMoves
+    ) {
       let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
       this.throwableObjects.push(bottle);
       this.bottleCount -= 1;
@@ -105,18 +135,15 @@ class World {
           break;
         }
       }
-
       if (!hitter.hasHit) {
         for (let indexEnd = 0; indexEnd < this.level.endBoss.length; indexEnd++) {
           let end = this.level.endBoss[indexEnd];
-
           if (hitter.isCollecting(end) && end.energy !== 0 && !hitter.hasHit) {
             this.killSound.play();
             end.hit(20);
             this.bossBar.setPercentage(end.energy);
             hitter.hasHit = true;
             hitter.isBroken = true;
-
             this.imageRemoval(hitter, this.throwableObjects);
             break;
           }
@@ -145,7 +172,9 @@ class World {
     this.addToMap(this.statusBar);
     this.addToMap(this.coinBar);
     this.addToMap(this.bottleBar);
-    this.addToMap(this.bossBar);
+    if (this.triggerBossBar) {
+      this.addToMap(this.bossBar);
+    }
 
     this.ctx.translate(this.camera_x, 0);
 
@@ -178,9 +207,9 @@ class World {
     }
     mo.draw(this.ctx);
 
-    mo.drawFrame(this.ctx);
+    //mo.drawFrame(this.ctx);
 
-    mo.drawHitBox(this.ctx);
+    //mo.drawHitBox(this.ctx);
 
     if (mo.otherDirection) {
       this.flipImageBack(mo);

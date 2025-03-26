@@ -6,7 +6,9 @@ class MovableObject extends DrawableObject {
   energy = 100;
   lastHit = 0;
   speedX = 0;
-  jumpSound = new Audio("./media/sound/smb_jump-small.wav");
+  jumpSound = new Audio(
+    "https://soundfxcenter.com/video-games/new-super-mario-bros/8d82b5_New_Super_Mario_Bros_Jump_Sound_Effect.mp3"
+  );
 
   applyGravity() {
     this.gravityInterval = setInterval(() => {
@@ -34,6 +36,10 @@ class MovableObject extends DrawableObject {
     );
   }
 
+  isCollidingEndboss(mo) {
+    return this.x + 400 >= mo.x;
+  }
+
   isCollecting(mo) {
     return (
       this.x + (this.width - this.offsetX) >= mo.x + mo.offsetX &&
@@ -49,12 +55,10 @@ class MovableObject extends DrawableObject {
     let topOfEnemy = mo.y;
 
     let isWithinXBounds =
-      this.x + (this.width - this.offsetX) > mo.x &&
-      this.x + this.offsetX < mo.x + mo.width;
+      this.x + (this.width - this.offsetX) > mo.x && this.x + this.offsetX < mo.x + mo.width;
 
     let isAboveWithThreshold =
-      bottomOfCharacter >= topOfEnemy &&
-      bottomOfCharacter <= topOfEnemy + thresholdY;
+      bottomOfCharacter >= topOfEnemy && bottomOfCharacter <= topOfEnemy + thresholdY;
     if (isWithinXBounds && isAboveWithThreshold) {
       return true;
     }
