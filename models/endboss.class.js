@@ -11,6 +11,7 @@ class Endboss extends MovableObject {
   deadBoss = new Audio("https://noproblo.dayjo.org/zeldasounds/OOT/OOT_6amRooster.wav");
   hurtBoss = new Audio("https://noproblo.dayjo.org/zeldasounds/OOT/OOT_Cucco2.wav");
   hasPlayedDead = false;
+  stageClear = new Audio("./media/sound/smb_stage_clear.wav");
 
   IMAGES_WALKING = [
     "./media/4_enemie_boss_chicken/1_walk/G1.png",
@@ -83,6 +84,9 @@ class Endboss extends MovableObject {
           this.playAnimationOnce(this.IMAGES_DEAD);
           this.deadBoss.play();
         }, 2000);
+        setTimeout(() => {
+          this.stageClear.play();
+        }, 3000);
       } else if (this.isHurt() && !this.hasPlayedDead && this.energy > 0) {
         this.playAnimation(this.IMAGES_HURT);
         this.hurtBoss.play();

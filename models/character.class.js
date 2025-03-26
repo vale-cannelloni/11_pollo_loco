@@ -10,6 +10,7 @@ class Character extends MovableObject {
   blockMoves = false;
   stepsSound = new Audio("https://noproblo.dayjo.org/zeldasounds/OOT/OOT_Steps_Dirt6.wav");
   gameOver = new Audio("./media/sound/smb_mariodie.wav");
+  snoring = new Audio("https://noproblo.dayjo.org/zeldasounds/OOT/OOT_Talon_Snore.wav");
   deathStarted = false;
   deathAnimationPlayed = false;
   deathImage = new Image();
@@ -90,6 +91,7 @@ class Character extends MovableObject {
     this.applyGravity();
   }
   animate() {
+    this.lastActivityTime = Date.now();
     setInterval(() => {
       if (
         (this.world.keyboard.RIGHT || this.world.keyboard.D) &&
@@ -114,10 +116,14 @@ class Character extends MovableObject {
     }, 1000 / 60);
 
     setInterval(() => {
+      let now = Date.now();
+      let idleDuration = now - this.lastActivityTime;
       if (this.isAboveGround()) {
         this.playAnimation(this.IMAGES_JUMPING);
+        this.lastActivityTime = now;
       } else if (this.isHurt()) {
         this.playAnimation(this.IMAGES_HURT);
+        this.lastActivityTime = now;
       } else if (
         (this.world.keyboard.RIGHT ||
           this.world.keyboard.LEFT ||
@@ -128,6 +134,7 @@ class Character extends MovableObject {
       ) {
         this.playAnimation(this.IMAGES_WALKING);
         this.stepsSound.play();
+        this.lastActivityTime = now;
       } else if (this.isDead() && !this.deathAnimationPlayed) {
         this.gameOver.play();
 
@@ -141,6 +148,9 @@ class Character extends MovableObject {
         }
       } else if (this.deathAnimationPlayed) {
         this.playAnimationOnce(this.IMAGES_DEAD);
+      } else if (idleDuration >= 3000 && !this.world.levelEndboss.hasPlayedDead) {
+        this.playAnimation(this.IMAGES_LONG_IDLE);
+        this.snoring.play();
       } else {
         this.playAnimation(this.IMAGES_IDLE);
       }
@@ -148,7 +158,12 @@ class Character extends MovableObject {
   }
 
   blockMovesVar() {
-    if (!this.isBeingPushedBack && !this.isDead() && !this.blockMoves) {
+    if (
+      !this.isBeingPushedBack &&
+      !this.isDead() &&
+      !this.blockMoves &&
+      !this.world.levelEndboss.hasPlayedDead
+    ) {
       return true;
     }
   }

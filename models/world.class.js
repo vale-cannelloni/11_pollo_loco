@@ -1,6 +1,7 @@
 class World {
   character = new Character();
   level = level1;
+  levelEndboss = level1.endBoss[0];
   ctx;
   canvas;
   keyboard;
@@ -33,7 +34,6 @@ class World {
 
   setWorld() {
     this.character.world = this;
-    this.level.endBoss[0].world = this;
   }
 
   run() {
@@ -44,6 +44,7 @@ class World {
       this.collectBottles();
       this.bottleCollision();
       this.checkTouch();
+      this.chickenWalk();
     }, 50);
   }
 
@@ -70,7 +71,8 @@ class World {
       this.keyboard.F &&
       this.bottleCount != 0 &&
       this.character.energy != 0 &&
-      !this.character.blockMoves
+      !this.character.blockMoves &&
+      !this.levelEndboss.hasPlayedDead
     ) {
       let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
       this.throwableObjects.push(bottle);
@@ -226,5 +228,13 @@ class World {
   flipImageBack(mo) {
     mo.x = mo.x * -1;
     this.ctx.restore();
+  }
+
+  chickenWalk() {
+    this.level.enemies.forEach((enemy) => {
+      if (this.character.energy <= 0) {
+        enemy.stopWalk = true;
+      }
+    });
   }
 }
