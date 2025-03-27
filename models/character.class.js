@@ -105,11 +105,7 @@ class Character extends MovableObject {
         this.otherDirection = true;
         this.moveLeft();
       }
-      if (
-        (this.world.keyboard.UP || this.world.keyboard.SPACE) &&
-        !this.isAboveGround() &&
-        this.blockMovesVar()
-      ) {
+      if (this.world.keyboard.SPACE && !this.isAboveGround() && this.blockMovesVar()) {
         this.jump(30);
       }
       this.world.camera_x = -this.x + 100;
@@ -152,7 +148,11 @@ class Character extends MovableObject {
         }
       } else if (this.deathAnimationPlayed) {
         this.playAnimationOnce(this.IMAGES_DEAD);
-      } else if (idleDuration >= 3000 && !this.world.levelEndboss.hasPlayedDead) {
+      } else if (
+        idleDuration >= 3000 &&
+        !this.world.levelEndboss.hasPlayedDead &&
+        !this.world.levelEndboss.hasPlayedAlert
+      ) {
         this.playAnimation(this.IMAGES_LONG_IDLE);
         this.snoring.play();
       } else {

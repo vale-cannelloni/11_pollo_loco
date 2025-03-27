@@ -3,15 +3,16 @@ class Endboss extends MovableObject {
   width = this.width * 3.5;
   y = -60;
   energy = 100;
-  isHurting = false;
   offsetYTop = 100;
   offsetX = 75;
+  speed = 20;
   angry = false;
   hasPlayedAlert = false;
   deadBoss = new Audio("https://noproblo.dayjo.org/zeldasounds/OOT/OOT_6amRooster.wav");
   hurtBoss = new Audio("https://noproblo.dayjo.org/zeldasounds/OOT/OOT_Cucco2.wav");
   hasPlayedDead = false;
   stageClear = new Audio("./media/sound/smb_stage_clear.wav");
+  stopWalk = false;
 
   IMAGES_WALKING = [
     "./media/4_enemie_boss_chicken/1_walk/G1.png",
@@ -72,7 +73,7 @@ class Endboss extends MovableObject {
 
   animate() {
     setInterval(() => {
-      if (this.energy <= 0 && !this.hasPlayedDead) {
+      if (this.energy <= 0 && !this.hasPlayedDead && !this.stopWalk) {
         this.hasPlayedDead = true;
         let dyingInt = setInterval(() => {
           this.playAnimation(this.IMAGES_HURT);
@@ -87,25 +88,26 @@ class Endboss extends MovableObject {
         setTimeout(() => {
           this.stageClear.play();
         }, 3000);
-      } else if (this.isHurt() && !this.hasPlayedDead && this.energy > 0) {
+        setTimeout(() => {
+          gameState = "gameover";
+          initWin();
+        }, 9000);
+      } else if (this.isHurt() && !this.hasPlayedDead && this.energy > 0 && !this.stopWalk) {
         this.playAnimation(this.IMAGES_HURT);
         this.hurtBoss.play();
-      } else if (this.angry && !this.hasPlayedDead) {
+      } else if (this.angry && !this.hasPlayedDead && !this.stopWalk) {
         if (!this.hasPlayedAlert) {
           this.playAnimationOnce(this.IMAGES_ALERT);
           this.hasPlayedAlert = true;
         }
-      } else if (this.hasPlayedAlert && !this.angry && !this.hasPlayedDead) {
+      } else if (this.hasPlayedAlert && !this.angry && !this.hasPlayedDead && !this.stopWalk) {
         this.playAnimation(this.IMAGES_ATTACK);
-      } else if (!this.hasPlayedDead) {
+        setTimeout(() => {
+          this.moveLeft();
+        }, 500);
+      } else if (!this.hasPlayedDead && !this.stopWalk) {
         this.playAnimation(this.IMAGES_WALKING);
       }
     }, 100);
-  }
-
-  startHurt() {
-    setTimeout(() => {
-      this.hisHurting = false;
-    }, 2000);
   }
 }

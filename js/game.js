@@ -4,10 +4,6 @@ let keyboard = new Keyboard();
 let keyboardActive = true;
 let gameState = "start";
 
-//start
-//playing
-//gameover
-
 document.addEventListener("keydown", function (e) {
   if (gameState === "start" && e.key === "Enter") {
     gameState = "playing";
@@ -32,6 +28,11 @@ function initStart() {
 function initOver() {
   canvas = document.getElementById("canvas");
   world = new GameOverScreen(canvas, keyboard);
+}
+
+function initWin() {
+  canvas = document.getElementById("canvas");
+  world = new GameWinScreen(canvas, keyboard);
 }
 
 window.addEventListener("keydown", (e) => {

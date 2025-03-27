@@ -9,6 +9,10 @@
   font-size: 56px;
 }
 
+html {
+  background-color: rgb(203, 91, 0);
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -16,11 +20,24 @@ body {
   background-image: url(.//media/images/desert2.png);
   background-position: center;
   background-repeat: no-repeat;
+  margin: 0;
 }
 
 canvas {
   background-color: black;
   display: block;
+}
+
+.gameInstructions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px;
+  p {
+    font-size: 32px;
+    text-align: center;
+    margin: 0;
+  }
 }
 
 @media only screen and (max-width: 720px) {
@@ -34,6 +51,9 @@ canvas {
     height: 100vh;
   }
   h1 {
+    display: none;
+  }
+  .gameInstructions {
     display: none;
   }
 }

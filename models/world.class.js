@@ -1,7 +1,7 @@
 class World {
   character = new Character();
-  level = level1;
-  levelEndboss = level1.endBoss[0];
+  level = initLevel();
+  levelEndboss = this.level.endBoss[0];
   ctx;
   canvas;
   keyboard;
@@ -45,6 +45,7 @@ class World {
       this.bottleCollision();
       this.checkTouch();
       this.chickenWalk();
+      this.endbossWalk();
     }, 50);
   }
 
@@ -94,6 +95,14 @@ class World {
           this.statusBar.setPercentage(this.character.energy);
           this.character.pushBack();
         }
+      }
+    });
+    this.level.endBoss.forEach((boss) => {
+      if (this.character.isColliding(boss) && this.character.energy !== 0) {
+        this.character.hit(10);
+        this.charHit.play();
+        this.statusBar.setPercentage(this.character.energy);
+        this.character.pushBack();
       }
     });
   }
@@ -234,6 +243,14 @@ class World {
     this.level.enemies.forEach((enemy) => {
       if (this.character.energy <= 0) {
         enemy.stopWalk = true;
+      }
+    });
+  }
+
+  endbossWalk() {
+    this.level.endBoss.forEach((boss) => {
+      if (this.character.energy <= 0) {
+        boss.stopWalk = true;
       }
     });
   }
