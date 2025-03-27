@@ -1,5 +1,5 @@
 class World {
-  character = new Character();
+  character = initCharacter();
   level = initLevel();
   levelEndboss = this.level.endBoss[0];
   ctx;
@@ -118,7 +118,9 @@ class World {
     this.character.hit(amount);
     this.charHit.play();
     this.statusBar.setPercentage(this.character.energy);
-    this.character.pushBack();
+    if (this.character.energy > 15) {
+      this.character.pushBack();
+    }
   }
 
   collectCoins() {

@@ -1,3 +1,7 @@
+function initCharacter() {
+  return new Character();
+}
+
 class Character extends MovableObject {
   height = 300;
   width = 150;
@@ -137,7 +141,7 @@ class Character extends MovableObject {
 
       if (this.isAboveGround()) {
         this.playJumpAnimation(now);
-      } else if (this.isHurt()) {
+      } else if (this.isHurt() && this.energy != 0) {
         this.playHurtAnimation(now);
       } else if (this.isMoving() && this.blockMovesVar() && !this.blockMoves) {
         this.playWalkingAnimation(now);
@@ -180,6 +184,7 @@ class Character extends MovableObject {
   }
 
   playDeathSequence() {
+    restart = true;
     rewindSong(gamePlaySound);
     rewindSong(bossBattleSound);
 
@@ -193,7 +198,6 @@ class Character extends MovableObject {
       setTimeout(() => {
         this.deathAnimationPlayed = true;
       }, 500);
-
       setTimeout(() => {
         gameState = "gameover";
         initOver();

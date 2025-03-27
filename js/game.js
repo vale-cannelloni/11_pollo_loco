@@ -3,6 +3,7 @@ let world;
 let keyboard = new Keyboard();
 let keyboardActive = true;
 let gameState = "start";
+let restart = false;
 
 let clickSound = new Audio(
   "https://eta.vgmtreasurechest.com/soundtracks/super-mario-world-snes-gamerip/dhhtgkuddl/01.%20Nintendo%20Logo.mp3"
@@ -26,11 +27,12 @@ let bossBattleSound = new Audio(
 
 document.addEventListener("keydown", function (e) {
   if (gameState === "start" && e.key === "Enter") {
-    startGame();
+    init();
   }
 
-  if (gameState === "gameover" && e.key.toLowerCase() === "r") {
-    initStart();
+  if ((gameState === "gameover" || gameState === "playing") && e.key.toLowerCase() === "r" && !restart) {
+    rewindSong(gamePlaySound);
+    startGame();
   }
 });
 
@@ -42,6 +44,9 @@ function init() {
   showButtons();
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
+  setTimeout(() => {
+    restart = false;
+  }, 5000);
 }
 
 function initStart() {
@@ -56,6 +61,7 @@ function initStart() {
 }
 
 function initOver() {
+  restart = false;
   blink("blinkerOver", "gameover", "restartGameOverlay");
   showButtons();
   canvas = document.getElementById("canvas");
@@ -87,6 +93,12 @@ function rewindSong(song) {
 }
 
 function startGame() {
+  permanentRestart = true;
+  restart = true;
+  rewindSong(gamePlaySound);
+  rewindSong(bossBattleSound);
+  rewindSong(gameOverSound);
+  rewindSong(gameWinSound);
   clickSound.play();
   setTimeout(() => {
     init();
