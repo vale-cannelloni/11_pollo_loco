@@ -180,6 +180,9 @@ class Character extends MovableObject {
   }
 
   playDeathSequence() {
+    rewindSong(gamePlaySound);
+    rewindSong(bossBattleSound);
+
     this.gameOver.play();
 
     if (!this.deathStarted) {

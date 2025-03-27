@@ -55,8 +55,12 @@ class World {
         return;
       } else if (this.character.isCollidingEndboss(boss)) {
         boss.angry = true;
+        rewindSong(gamePlaySound);
         this.triggerBossBar = true;
         this.character.blockMoves = true;
+        setTimeout(() => {
+          bossBattleSound.play();
+        }, 1000);
         setTimeout(() => {
           boss.angry = false;
           this.character.blockMoves = false;

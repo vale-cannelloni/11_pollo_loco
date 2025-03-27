@@ -120,6 +120,7 @@ class Endboss extends MovableObject {
 
   scheduleDeathAnimation() {
     setTimeout(() => {
+      rewindSong(bossBattleSound);
       clearInterval(this.dyingInterval);
       this.playAnimationOnce(this.IMAGES_DEAD);
       this.deadBoss.play();

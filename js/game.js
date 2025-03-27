@@ -4,49 +4,100 @@ let keyboard = new Keyboard();
 let keyboardActive = true;
 let gameState = "start";
 
+let clickSound = new Audio(
+  "https://eta.vgmtreasurechest.com/soundtracks/super-mario-world-snes-gamerip/dhhtgkuddl/01.%20Nintendo%20Logo.mp3"
+);
+
+let startScreenSound = new Audio(
+  "https://eta.vgmtreasurechest.com/soundtracks/super-mario-world-snes-gamerip/tckqucvbxr/02.%20Title.mp3"
+);
+
+let gamePlaySound = new Audio(
+  "https://eta.vgmtreasurechest.com/soundtracks/super-mario-world-snes-gamerip/cybobvkufo/12.%20Overworld.mp3"
+);
+
+let gameOverSound = new Audio(
+  "https://eta.vgmtreasurechest.com/soundtracks/super-mario-world-snes-gamerip/rzghhryzkm/52.%20Game%20Over.mp3"
+);
+
+let gameWinSound = new Audio(
+  "https://eta.vgmtreasurechest.com/soundtracks/super-mario-world-snes-gamerip/xhdrnmdrka/42.%20Bonus%20Game%20Clear.mp3"
+);
+
+let bossBattleSound = new Audio(
+  "https://eta.vgmtreasurechest.com/soundtracks/super-mario-world-snes-gamerip/dlgohnhgam/55.%20Bowser%27s%20Last%20Attack.mp3"
+);
+
 document.addEventListener("keydown", function (e) {
   if (gameState === "start" && e.key === "Enter") {
-    gameState = "playing";
     init();
   }
 
   if (gameState === "gameover" && e.key.toLowerCase() === "r") {
-    gameState = "start";
     initStart();
   }
 });
 
 function init() {
+  rewindSong(startScreenSound);
+  gamePlaySound.play();
+  gameState = "playing";
+  blink("blinker", "start", "startGameOverlay");
+  blink("blinkerOver", "gameover", "restartGameOverlay");
+  showButtons();
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
-  showButtons();
 }
+
 function initStart() {
+  rewindSong(gameOverSound);
+  rewindSong(gameWinSound);
+  clickSound.play();
+  gameState = "start";
+  blink("blinker", "start", "startGameOverlay");
+  blink("blinkerOver", "gameover", "restartGameOverlay");
+  showButtons();
   canvas = document.getElementById("canvas");
   world = new StartScreen(canvas, keyboard);
-  showButtons();
+  startScreenSound.play();
 }
 
 function initOver() {
+  blink("blinkerOver", "gameover", "restartGameOverlay");
+  showButtons();
   canvas = document.getElementById("canvas");
   world = new GameOverScreen(canvas, keyboard);
-  showButtons();
+  gameOverSound.play();
 }
 
 function initWin() {
+  blink("blinkerOver", "gameover", "restartGameOverlay");
+  showButtons();
   canvas = document.getElementById("canvas");
   world = new GameWinScreen(canvas, keyboard);
-  showButtons();
+  gameWinSound.play();
 }
 
 function showButtons() {
   let mobileButton = document.getElementById("mobileButtons");
   if (!mobileButton) return;
-  if (gameState !== "playing") {
-    mobileButton.classList.add("d_none");
+  if (gameState === "playing") {
+    mobileButton.style.visibility = "visible";
   } else {
-    mobileButton.classList.remove("d_none");
+    mobileButton.style.visibility = "hidden";
   }
+}
+
+function rewindSong(song) {
+  song.pause();
+  song.currentTime = 0;
+}
+
+function startGame() {
+  clickSound.play();
+  setTimeout(() => {
+    init();
+  }, 1500);
 }
 
 window.addEventListener("keydown", (e) => {
@@ -143,4 +194,22 @@ function simulateKeyUp(keyCode) {
   Object.defineProperty(event, "which", { value: keyCode });
 
   document.dispatchEvent(event);
+}
+
+function blink(blinkerId, state, overlayId) {
+  let blinker = document.getElementById(blinkerId);
+  let overlay = document.getElementById(overlayId);
+  overlay.style.visibility = "visible";
+  if (gameState == state) {
+    blinker.style.visibility = "hidden";
+    setTimeout(() => {
+      blinker.style.visibility = "visible";
+      setTimeout(() => {
+        blink(blinkerId, state, overlayId);
+      }, 500);
+    }, 500);
+  } else {
+    blinker.style.visibility = "hidden";
+    overlay.style.visibility = "hidden";
+  }
 }
