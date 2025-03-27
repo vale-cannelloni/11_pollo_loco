@@ -109,7 +109,7 @@ class World {
   }
 
   handleBossCollision(boss) {
-    if (this.character.isColliding(boss) && this.character.energy !== 0) {
+    if (this.character.isColliding(boss) && this.character.energy !== 0 && boss.energy !== 0) {
       this.applyCharacterDamage(10);
     }
   }
