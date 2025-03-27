@@ -11,7 +11,6 @@ class Endboss extends MovableObject {
   deadBoss = new Audio("https://noproblo.dayjo.org/zeldasounds/OOT/OOT_6amRooster.wav");
   hurtBoss = new Audio("https://noproblo.dayjo.org/zeldasounds/OOT/OOT_Cucco2.wav");
   hasPlayedDead = false;
-  stageClear = new Audio("./media/sound/smb_stage_clear.wav");
   stopWalk = false;
 
   IMAGES_WALKING = [
@@ -107,7 +106,6 @@ class Endboss extends MovableObject {
     this.hasPlayedDead = true;
     this.startDyingAnimation();
     this.scheduleDeathAnimation();
-    this.scheduleStageClearSound();
     this.scheduleGameOver();
   }
 
@@ -127,17 +125,11 @@ class Endboss extends MovableObject {
     }, 2000);
   }
 
-  scheduleStageClearSound() {
-    setTimeout(() => {
-      this.stageClear.play();
-    }, 3000);
-  }
-
   scheduleGameOver() {
     setTimeout(() => {
       gameState = "gameover";
       initWin();
-    }, 9000);
+    }, 3000);
   }
 
   playHurtAnimation() {

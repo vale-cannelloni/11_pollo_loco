@@ -192,12 +192,12 @@ class Character extends MovableObject {
 
       setTimeout(() => {
         this.deathAnimationPlayed = true;
-      }, 1000);
+      }, 500);
 
       setTimeout(() => {
         gameState = "gameover";
         initOver();
-      }, 4000);
+      }, 3000);
     }
   }
 
