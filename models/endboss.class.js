@@ -73,41 +73,90 @@ class Endboss extends MovableObject {
 
   animate() {
     setInterval(() => {
-      if (this.energy <= 0 && !this.hasPlayedDead && !this.stopWalk) {
-        this.hasPlayedDead = true;
-        let dyingInt = setInterval(() => {
-          this.playAnimation(this.IMAGES_HURT);
-          this.hurtBoss.play();
-        }, 100);
-
-        setTimeout(() => {
-          clearInterval(dyingInt);
-          this.playAnimationOnce(this.IMAGES_DEAD);
-          this.deadBoss.play();
-        }, 2000);
-        setTimeout(() => {
-          this.stageClear.play();
-        }, 3000);
-        setTimeout(() => {
-          gameState = "gameover";
-          initWin();
-        }, 9000);
-      } else if (this.isHurt() && !this.hasPlayedDead && this.energy > 0 && !this.stopWalk) {
-        this.playAnimation(this.IMAGES_HURT);
-        this.hurtBoss.play();
-      } else if (this.angry && !this.hasPlayedDead && !this.stopWalk) {
-        if (!this.hasPlayedAlert) {
-          this.playAnimationOnce(this.IMAGES_ALERT);
-          this.hasPlayedAlert = true;
-        }
-      } else if (this.hasPlayedAlert && !this.angry && !this.hasPlayedDead && !this.stopWalk) {
-        this.playAnimation(this.IMAGES_ATTACK);
-        setTimeout(() => {
-          this.moveLeft();
-        }, 500);
-      } else if (!this.hasPlayedDead && !this.stopWalk) {
-        this.playAnimation(this.IMAGES_WALKING);
+      if (this.shouldPlayDeadAnimation()) {
+        this.playDeadSequence();
+      } else if (this.shouldPlayHurtAnimation()) {
+        this.playHurtAnimation();
+      } else if (this.shouldPlayAlertAnimation()) {
+        this.playAlertAnimation();
+      } else if (this.shouldAttack()) {
+        this.performAttack();
+      } else if (!this.hasPlayedDead && !this.stopWalk && !this.hasPlayedAlert) {
+        this.playWalkAnimation();
       }
     }, 100);
+  }
+
+  shouldPlayDeadAnimation() {
+    return this.energy <= 0 && !this.hasPlayedDead && !this.stopWalk;
+  }
+
+  shouldPlayHurtAnimation() {
+    return this.isHurt() && !this.hasPlayedDead && this.energy > 0 && !this.stopWalk;
+  }
+
+  shouldPlayAlertAnimation() {
+    return this.angry && !this.hasPlayedDead && !this.stopWalk && !this.hasPlayedAlert;
+  }
+
+  shouldAttack() {
+    return this.hasPlayedAlert && !this.angry && !this.hasPlayedDead && !this.stopWalk;
+  }
+
+  playDeadSequence() {
+    this.hasPlayedDead = true;
+    this.startDyingAnimation();
+    this.scheduleDeathAnimation();
+    this.scheduleStageClearSound();
+    this.scheduleGameOver();
+  }
+
+  startDyingAnimation() {
+    this.dyingInterval = setInterval(() => {
+      this.playAnimation(this.IMAGES_HURT);
+      this.hurtBoss.play();
+    }, 100);
+  }
+
+  scheduleDeathAnimation() {
+    setTimeout(() => {
+      clearInterval(this.dyingInterval);
+      this.playAnimationOnce(this.IMAGES_DEAD);
+      this.deadBoss.play();
+    }, 2000);
+  }
+
+  scheduleStageClearSound() {
+    setTimeout(() => {
+      this.stageClear.play();
+    }, 3000);
+  }
+
+  scheduleGameOver() {
+    setTimeout(() => {
+      gameState = "gameover";
+      initWin();
+    }, 9000);
+  }
+
+  playHurtAnimation() {
+    this.playAnimation(this.IMAGES_HURT);
+    this.hurtBoss.play();
+  }
+
+  playAlertAnimation() {
+    this.playAnimationOnce(this.IMAGES_ALERT);
+    this.hasPlayedAlert = true;
+  }
+
+  performAttack() {
+    this.playAnimation(this.IMAGES_ATTACK);
+    setTimeout(() => {
+      this.moveLeft();
+    }, 500);
+  }
+
+  playWalkAnimation() {
+    this.playAnimation(this.IMAGES_WALKING);
   }
 }

@@ -85,26 +85,36 @@ class World {
 
   checkCollisions() {
     this.level.enemies.forEach((enemy) => {
-      if (this.character.isColliding(enemy) && enemy.energy !== 0) {
-        if (this.character.isLandingOnTopOf(enemy)) {
-          this.killSound.play();
-          enemy.hit(100);
-        } else if (this.character.energy !== 0) {
-          this.character.hit(5);
-          this.charHit.play();
-          this.statusBar.setPercentage(this.character.energy);
-          this.character.pushBack();
-        }
-      }
+      this.handleEnemyCollision(enemy);
     });
+
     this.level.endBoss.forEach((boss) => {
-      if (this.character.isColliding(boss) && this.character.energy !== 0) {
-        this.character.hit(10);
-        this.charHit.play();
-        this.statusBar.setPercentage(this.character.energy);
-        this.character.pushBack();
-      }
+      this.handleBossCollision(boss);
     });
+  }
+
+  handleEnemyCollision(enemy) {
+    if (!this.character.isColliding(enemy) || enemy.energy === 0) return;
+
+    if (this.character.isLandingOnTopOf(enemy)) {
+      this.killSound.play();
+      enemy.hit(100);
+    } else if (this.character.energy !== 0) {
+      this.applyCharacterDamage(5);
+    }
+  }
+
+  handleBossCollision(boss) {
+    if (this.character.isColliding(boss) && this.character.energy !== 0) {
+      this.applyCharacterDamage(10);
+    }
+  }
+
+  applyCharacterDamage(amount) {
+    this.character.hit(amount);
+    this.charHit.play();
+    this.statusBar.setPercentage(this.character.energy);
+    this.character.pushBack();
   }
 
   collectCoins() {
@@ -135,32 +145,44 @@ class World {
     for (let i = 0; i < this.throwableObjects.length; i++) {
       let hitter = this.throwableObjects[i];
       if (hitter.hasHit) continue;
-      for (let indexEnemy = 0; indexEnemy < this.level.enemies.length; indexEnemy++) {
-        let enemy = this.level.enemies[indexEnemy];
-        if (hitter.isCollecting(enemy) && enemy.energy !== 0 && !hitter.hasHit) {
-          this.killSound.play();
-          enemy.hit(100);
-          hitter.hasHit = true;
-          hitter.isBroken = true;
-          this.imageRemoval(hitter, this.throwableObjects);
-          break;
-        }
-      }
-      if (!hitter.hasHit) {
-        for (let indexEnd = 0; indexEnd < this.level.endBoss.length; indexEnd++) {
-          let end = this.level.endBoss[indexEnd];
-          if (hitter.isCollecting(end) && end.energy !== 0 && !hitter.hasHit) {
-            this.killSound.play();
-            end.hit(20);
-            this.bossBar.setPercentage(end.energy);
-            hitter.hasHit = true;
-            hitter.isBroken = true;
-            this.imageRemoval(hitter, this.throwableObjects);
-            break;
-          }
-        }
+
+      if (this.checkEnemyCollision(hitter)) continue;
+
+      this.checkEndBossCollision(hitter);
+    }
+  }
+
+  checkEnemyCollision(hitter) {
+    for (let indexEnemy = 0; indexEnemy < this.level.enemies.length; indexEnemy++) {
+      let enemy = this.level.enemies[indexEnemy];
+      if (hitter.isCollecting(enemy) && enemy.energy !== 0 && !hitter.hasHit) {
+        this.killSound.play();
+        enemy.hit(100);
+        this.registerHit(hitter);
+        return true; // Stop checking once hit
       }
     }
+    return false;
+  }
+
+  checkEndBossCollision(hitter) {
+    for (let indexEnd = 0; indexEnd < this.level.endBoss.length; indexEnd++) {
+      let end = this.level.endBoss[indexEnd];
+      if (hitter.isCollecting(end) && end.energy !== 0 && !hitter.hasHit) {
+        this.killSound.play();
+        end.hit(20);
+        this.bossBar.setPercentage(end.energy);
+        this.registerHit(hitter);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  registerHit(hitter) {
+    hitter.hasHit = true;
+    hitter.isBroken = true;
+    this.imageRemoval(hitter, this.throwableObjects);
   }
 
   imageRemoval(imageRemove, removearray) {
@@ -174,11 +196,8 @@ class World {
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
     this.ctx.translate(this.camera_x, 0);
-
     this.addObjectsToMap(this.level.backgroundObjects);
-
     this.ctx.translate(-this.camera_x, 0);
     this.addToMap(this.statusBar);
     this.addToMap(this.coinBar);
@@ -186,20 +205,15 @@ class World {
     if (this.triggerBossBar) {
       this.addToMap(this.bossBar);
     }
-
     this.ctx.translate(this.camera_x, 0);
-
     this.addToMap(this.character);
-
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.throwableObjects);
     this.addObjectsToMap(this.level.coins);
     this.addObjectsToMap(this.level.bottles);
     this.addObjectsToMap(this.level.endBoss);
-
     this.ctx.translate(-this.camera_x, 0);
-
     let self = this;
     requestAnimationFrame(function () {
       self.draw();

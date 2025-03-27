@@ -86,7 +86,6 @@ class MovableObject extends DrawableObject {
   pushBack() {
     if (this.x > 0 && !this.isBeingPushedBack) {
       this.isBeingPushedBack = true;
-
       let pushInterval = setInterval(() => {
         this.x -= 2;
         if (this.x <= 0) {
