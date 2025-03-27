@@ -19,20 +19,34 @@ document.addEventListener("keydown", function (e) {
 function init() {
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
+  showButtons();
 }
 function initStart() {
   canvas = document.getElementById("canvas");
   world = new StartScreen(canvas, keyboard);
+  showButtons();
 }
 
 function initOver() {
   canvas = document.getElementById("canvas");
   world = new GameOverScreen(canvas, keyboard);
+  showButtons();
 }
 
 function initWin() {
   canvas = document.getElementById("canvas");
   world = new GameWinScreen(canvas, keyboard);
+  showButtons();
+}
+
+function showButtons() {
+  let mobileButton = document.getElementById("mobileButtons");
+  if (!mobileButton) return;
+  if (gameState !== "playing") {
+    mobileButton.classList.add("d_none");
+  } else {
+    mobileButton.classList.remove("d_none");
+  }
 }
 
 window.addEventListener("keydown", (e) => {
@@ -106,3 +120,27 @@ window.addEventListener("keyup", (e) => {
     }
   }
 });
+
+function simulateKeyDown(keyCode) {
+  let event = new KeyboardEvent("keydown", {
+    bubbles: true,
+    cancelable: true,
+  });
+
+  Object.defineProperty(event, "keyCode", { value: keyCode });
+  Object.defineProperty(event, "which", { value: keyCode });
+
+  document.dispatchEvent(event);
+}
+
+function simulateKeyUp(keyCode) {
+  let event = new KeyboardEvent("keyup", {
+    bubbles: true,
+    cancelable: true,
+  });
+
+  Object.defineProperty(event, "keyCode", { value: keyCode });
+  Object.defineProperty(event, "which", { value: keyCode });
+
+  document.dispatchEvent(event);
+}

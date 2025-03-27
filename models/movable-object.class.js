@@ -5,7 +5,6 @@ class MovableObject extends DrawableObject {
   accelleration = 2.5;
   energy = 100;
   lastHit = 0;
-  speedX = 0;
   jumpSound = new Audio(
     "https://soundfxcenter.com/video-games/new-super-mario-bros/8d82b5_New_Super_Mario_Bros_Jump_Sound_Effect.mp3"
   );
