@@ -30,7 +30,7 @@ let bossBattleSound = new Audio(
 
 document.addEventListener("keydown", function (e) {
   if (gameState === "start" && e.key === "Enter") {
-    init();
+    startGame();
   }
 
   if (gameState === "gameover" && e.key.toLowerCase() === "r") {
