@@ -148,7 +148,6 @@ class World {
       if (hitter.hasHit) continue;
       if (this.checkEnemyCollision(hitter)) continue;
       this.checkEndBossCollision(hitter);
-      soundEffects.fireSound.play();
     }
   }
 
@@ -159,7 +158,7 @@ class World {
         soundEffects.killSound.play();
         enemy.hit(100);
         this.registerHit(hitter);
-        return true; // Stop checking once hit
+        return true;
       }
     }
     return false;

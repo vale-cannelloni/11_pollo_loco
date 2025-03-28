@@ -41,14 +41,23 @@
   </head>
   <body onload="initStart()">
     <h1>El Pollo Loco</h1>
-    <div class="alignment">
-      <canvas id="canvas" width="720" height="480"></canvas>
-      <div id="startGameOverlay" class="startGameOverlay" onclick="init()">
-        <p id="blinker">Press to start</p>
+    <div id="fullscreen">
+      <div class="alignment">
+        <canvas id="canvas" width="720" height="480"></canvas>
+        <div id="startGameOverlay" class="startGameOverlay" onclick="init()">
+          <p id="blinker">Press ENTER or DISPLAY to start</p>
+        </div>
+        <div id="restartGameOverlay" class="restartGameOverlay" onclick="init()">
+          <p id="blinkerOver">Press R or DISPLAY to restart</p>
+        </div>
+        <button id="soundMute" class="soundMenu" onclick="muteSound(), this.blur()">
+          <img src="./media/images/soundMenu.png" alt="sound menu button" />
+        </button>
+        <button id="screenFull" class="screenFull" onclick="toggleFullscreen(), this.blur()">
+          <img src="./media/images/full_screen.png" alt="fullscreen button" />
+        </button>
       </div>
-      <div id="restartGameOverlay" class="restartGameOverlay" onclick="init()">
-        <p id="blinkerOver">Press to go to Menu</p>
-      </div>
+
       <div id="mobileButtons" class="mobileButtons">
         <div class="actionButtons">
           <button
@@ -83,14 +92,15 @@
           </button>
         </div>
       </div>
-      <div class="gameInstructions">
-        <p>ENTER = Start game // R = Restart</p>
-        <p>&#8678; , A = Walk left // &#8680; , D = Walk right</p>
-        <p>SPACE = Jump // F = Throw bottle</p>
-      </div>
-      <button class="webNav">
-        <a href="impressum.html">Impressum</a>
-      </button>
     </div>
+
+    <div class="gameInstructions">
+      <p>ENTER = Start game // R = Restart</p>
+      <p>&#8678; , A = Walk left // &#8680; , D = Walk right</p>
+      <p>SPACE = Jump // F = Throw bottle</p>
+    </div>
+    <button class="webNav">
+      <a href="impressum.html">Impressum</a>
+    </button>
   </body>
 </html>

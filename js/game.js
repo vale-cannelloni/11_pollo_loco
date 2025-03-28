@@ -5,11 +5,16 @@ let keyboardActive = true;
 let gameState = "start";
 let restart = false;
 let intervalIds = [];
+let mute = false;
 
 window.addEventListener("keydown", function (e) {
   if (e.keyCode == 32 && e.target == document.body) {
     e.preventDefault();
   }
+});
+
+window.addEventListener("contextmenu", (e) => {
+  e.preventDefault();
 });
 
 document.addEventListener("keydown", function (e) {
@@ -79,7 +84,16 @@ function rewindSong() {
   for (let key in soundEffects) {
     if (soundEffects[key] instanceof Audio) {
       soundEffects[key].pause();
-      soundEffects[key].currentTime = 0; // resets to beginning
+      soundEffects[key].currentTime = 0;
+    }
+  }
+}
+
+function muteSound() {
+  mute = !mute;
+  for (let key in soundEffects) {
+    if (soundEffects[key] instanceof Audio) {
+      soundEffects[key].volume = mute ? 0 : 1;
     }
   }
 }
@@ -219,3 +233,43 @@ function blink(blinkerId, state, overlayId) {
     overlay.style.visibility = "hidden";
   }
 }
+
+function toggleFullscreen() {
+  let elem = document.getElementById("fullscreen");
+  if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+    exitFullscreen();
+  } else {
+    enterFullscreen(elem);
+  }
+}
+
+function enterFullscreen(el) {
+  if (el.requestFullscreen) {
+    el.requestFullscreen();
+  } else if (el.webkitRequestFullscreen) {
+    el.webkitRequestFullscreen();
+  } else if (el.msRequestFullscreen) {
+    el.msRequestFullscreen();
+  }
+}
+
+function exitFullscreen() {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.webkitExitFullscreen) {
+    document.webkitExitFullscreen();
+  } else if (document.msExitFullscreen) {
+    document.msExitFullscreen();
+  }
+}
+
+window.addEventListener("orientationchange", function () {
+  let orientation =
+    (window.screen.orientation || {}).type || window.screen.mozOrientation || window.screen.msOrientation;
+
+  if (["landscape-primary", "landscape-secondary"].includes(orientation)) {
+    toggleFullscreen();
+  } else if (orientation === undefined) {
+    console.log("The orientation API isn't supported in this browser :(");
+  }
+});
