@@ -4,26 +4,13 @@ let keyboard = new Keyboard();
 let keyboardActive = true;
 let gameState = "start";
 let restart = false;
+let intervalIds = [];
 
-let clickSound = new Audio(
-  "https://eta.vgmtreasurechest.com/soundtracks/super-mario-world-snes-gamerip/dhhtgkuddl/01.%20Nintendo%20Logo.mp3"
-);
-
-let gamePlaySound = new Audio(
-  "https://eta.vgmtreasurechest.com/soundtracks/super-mario-world-snes-gamerip/cybobvkufo/12.%20Overworld.mp3"
-);
-
-let gameOverSound = new Audio(
-  "https://eta.vgmtreasurechest.com/soundtracks/super-mario-world-snes-gamerip/rzghhryzkm/52.%20Game%20Over.mp3"
-);
-
-let gameWinSound = new Audio(
-  "https://eta.vgmtreasurechest.com/soundtracks/super-mario-world-snes-gamerip/xhdrnmdrka/42.%20Bonus%20Game%20Clear.mp3"
-);
-
-let bossBattleSound = new Audio(
-  "https://eta.vgmtreasurechest.com/soundtracks/super-mario-world-snes-gamerip/dlgohnhgam/55.%20Bowser%27s%20Last%20Attack.mp3"
-);
+window.addEventListener("keydown", function (e) {
+  if (e.keyCode == 32 && e.target == document.body) {
+    e.preventDefault();
+  }
+});
 
 document.addEventListener("keydown", function (e) {
   if (gameState === "start" && e.key === "Enter") {
@@ -31,50 +18,51 @@ document.addEventListener("keydown", function (e) {
   }
 
   if ((gameState === "gameover" || gameState === "playing") && e.key.toLowerCase() === "r" && !restart) {
-    rewindSong(gamePlaySound);
+    stopGame();
     startGame();
   }
 });
 
 function init() {
-  gamePlaySound.play();
+  soundEffects.gamePlaySound.play();
   gameState = "playing";
-  blink("blinker", "start", "startGameOverlay");
-  blink("blinkerOver", "gameover", "restartGameOverlay");
-  showButtons();
+  startPlayMobile();
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
-  setTimeout(() => {
-    restart = false;
-  }, 5000);
+  restart = false;
 }
 
 function initStart() {
-  rewindSong(gameOverSound);
-  rewindSong(gameWinSound);
   gameState = "start";
-  blink("blinker", "start", "startGameOverlay");
-  blink("blinkerOver", "gameover", "restartGameOverlay");
-  showButtons();
+  startPlayMobile();
   canvas = document.getElementById("canvas");
   world = new StartScreen(canvas, keyboard);
 }
 
 function initOver() {
   restart = false;
-  blink("blinkerOver", "gameover", "restartGameOverlay");
-  showButtons();
+  overWinMobile();
   canvas = document.getElementById("canvas");
   world = new GameOverScreen(canvas, keyboard);
-  gameOverSound.play();
+  soundEffects.gameOverSound.play();
 }
 
 function initWin() {
-  blink("blinkerOver", "gameover", "restartGameOverlay");
-  showButtons();
+  overWinMobile();
   canvas = document.getElementById("canvas");
   world = new GameWinScreen(canvas, keyboard);
-  gameWinSound.play();
+  soundEffects.gameWinSound.play();
+}
+
+function startPlayMobile() {
+  blink("blinker", "start", "startGameOverlay");
+  blink("blinkerOver", "gameover", "restartGameOverlay");
+  showButtons();
+}
+
+function overWinMobile() {
+  blink("blinkerOver", "gameover", "restartGameOverlay");
+  showButtons();
 }
 
 function showButtons() {
@@ -87,23 +75,36 @@ function showButtons() {
   }
 }
 
-function rewindSong(song) {
-  song.pause();
-  song.currentTime = 0;
+function rewindSong() {
+  for (let key in soundEffects) {
+    if (soundEffects[key] instanceof Audio) {
+      soundEffects[key].pause();
+      soundEffects[key].currentTime = 0; // resets to beginning
+    }
+  }
 }
 
 function startGame() {
-  permanentRestart = true;
   restart = true;
-  rewindSong(gamePlaySound);
-  rewindSong(bossBattleSound);
-  rewindSong(gameOverSound);
-  rewindSong(gameWinSound);
-  clickSound.play();
   setTimeout(() => {
     init();
   }, 500);
 }
+
+function stopGame() {
+  intervalIds.forEach(clearInterval);
+  rewindSong();
+}
+/*
+function setStoppableInterval(fn, time) {
+  let id = setInterval(fn, time);
+  intervalIds.push(id);
+}
+setStoppableInterval(world.run, 500);
+
+function stopGame() {
+  intervalIds.forEach(clearInterval);
+}*/
 
 window.addEventListener("keydown", (e) => {
   if (keyboardActive) {

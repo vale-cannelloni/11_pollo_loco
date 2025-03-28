@@ -8,8 +8,7 @@ class Endboss extends MovableObject {
   speed = 20;
   angry = false;
   hasPlayedAlert = false;
-  deadBoss = new Audio("https://noproblo.dayjo.org/zeldasounds/OOT/OOT_6amRooster.wav");
-  hurtBoss = new Audio("https://noproblo.dayjo.org/zeldasounds/OOT/OOT_Cucco2.wav");
+
   hasPlayedDead = false;
   stopWalk = false;
 
@@ -71,7 +70,7 @@ class Endboss extends MovableObject {
   }
 
   animate() {
-    setInterval(() => {
+    let endbossLoop = setInterval(() => {
       if (this.shouldPlayDeadAnimation()) {
         this.playDeadSequence();
       } else if (this.shouldPlayHurtAnimation()) {
@@ -84,6 +83,7 @@ class Endboss extends MovableObject {
         this.playWalkAnimation();
       }
     }, 100);
+    intervalIds.push(endbossLoop);
   }
 
   shouldPlayDeadAnimation() {
@@ -112,16 +112,16 @@ class Endboss extends MovableObject {
   startDyingAnimation() {
     this.dyingInterval = setInterval(() => {
       this.playAnimation(this.IMAGES_HURT);
-      this.hurtBoss.play();
+      soundEffects.hurtBoss.play();
     }, 100);
   }
 
   scheduleDeathAnimation() {
     setTimeout(() => {
-      rewindSong(bossBattleSound);
+      rewindSong();
       clearInterval(this.dyingInterval);
       this.playAnimationOnce(this.IMAGES_DEAD);
-      this.deadBoss.play();
+      soundEffects.deadBoss.play();
     }, 2000);
   }
 
@@ -134,7 +134,7 @@ class Endboss extends MovableObject {
 
   playHurtAnimation() {
     this.playAnimation(this.IMAGES_HURT);
-    this.hurtBoss.play();
+    soundEffects.hurtBoss.play();
   }
 
   playAlertAnimation() {
@@ -144,9 +144,10 @@ class Endboss extends MovableObject {
 
   performAttack() {
     this.playAnimation(this.IMAGES_ATTACK);
-    setTimeout(() => {
+    let bossAttackMove = setTimeout(() => {
       this.moveLeft();
     }, 500);
+    intervalIds.push(bossAttackMove);
   }
 
   playWalkAnimation() {

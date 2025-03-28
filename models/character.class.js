@@ -12,9 +12,7 @@ class Character extends MovableObject {
   offsetX = 50;
   isBeingPushedBack = false;
   blockMoves = false;
-  stepsSound = new Audio("https://noproblo.dayjo.org/zeldasounds/OOT/OOT_Steps_Dirt6.wav");
-  gameOver = new Audio("./media/sound/smb_mariodie.wav");
-  snoring = new Audio("https://noproblo.dayjo.org/zeldasounds/OOT/OOT_Talon_Snore.wav");
+
   deathStarted = false;
   deathAnimationPlayed = false;
   deathImage = new Image();
@@ -101,11 +99,12 @@ class Character extends MovableObject {
   }
 
   startMovementLoop() {
-    setInterval(() => {
+    let movementLoop = setInterval(() => {
       this.handleMovementInput();
       this.handleJump();
       this.updateCameraPosition();
     }, 1000 / 60);
+    intervalIds.push(movementLoop);
   }
 
   handleMovementInput() {
@@ -135,7 +134,7 @@ class Character extends MovableObject {
   }
 
   startAnimationLoop() {
-    setInterval(() => {
+    let animationLoop = setInterval(() => {
       let now = Date.now();
       let idleDuration = now - this.lastActivityTime;
 
@@ -159,6 +158,7 @@ class Character extends MovableObject {
         this.playAnimation(this.IMAGES_IDLE);
       }
     }, 100);
+    intervalIds.push(animationLoop);
   }
 
   playJumpAnimation(now) {
@@ -179,16 +179,15 @@ class Character extends MovableObject {
 
   playWalkingAnimation(now) {
     this.playAnimation(this.IMAGES_WALKING);
-    this.stepsSound.play();
+    soundEffects.stepsSound.play();
     this.lastActivityTime = now;
   }
 
   playDeathSequence() {
     restart = true;
-    rewindSong(gamePlaySound);
-    rewindSong(bossBattleSound);
+    rewindSong();
 
-    this.gameOver.play();
+    soundEffects.gameOver.play();
 
     if (!this.deathStarted) {
       this.deathStarted = true;
@@ -207,7 +206,7 @@ class Character extends MovableObject {
 
   playLongIdleAnimation() {
     this.playAnimation(this.IMAGES_LONG_IDLE);
-    this.snoring.play();
+    soundEffects.snoring.play();
   }
 
   blockMovesVar() {

@@ -37,6 +37,7 @@ class Chicken extends MovableObject {
         this.moveLeft();
       }
     }, 1000 / 60);
+    intervalIds.push(this.moveInterval);
   }
 
   startAnimation() {
@@ -45,6 +46,7 @@ class Chicken extends MovableObject {
         this.playAnimation(this.IMAGES_WALKING);
       }
     }, 100);
+    intervalIds.push(this.animationInterval);
   }
 
   startEnergyCheck() {
@@ -53,6 +55,7 @@ class Chicken extends MovableObject {
         this.deadChicken();
       }
     }, 100);
+    intervalIds.push(this.energyCheckInterval);
   }
 
   deadChicken() {

@@ -13,13 +13,7 @@ class World {
   throwableObjects = [];
   coinCount = 0;
   bottleCount = 0;
-  endbossSound = new Audio(
-    "https://static.wikia.nocookie.net/soundeffects/images/b/b8/Godzilla_1962-1975_SFX.ogg"
-  );
-  coinSound = new Audio("./media/sound/smb_coin.wav");
-  killSound = new Audio("./media/sound/smb_stomp.wav");
-  takeSound = new Audio("./media/sound/smb_kick.wav");
-  charHit = new Audio("./media/sound/smb2_damage.wav");
+
   bossTrigger = false;
   triggerBossBar = false;
 
@@ -37,7 +31,7 @@ class World {
   }
 
   run() {
-    setInterval(() => {
+    let runInterval = setInterval(() => {
       this.checkCollisions();
       this.checkThrowObjects();
       this.collectCoins();
@@ -47,6 +41,7 @@ class World {
       this.chickenWalk();
       this.endbossWalk();
     }, 50);
+    intervalIds.push(runInterval);
   }
 
   checkTouch() {
@@ -55,16 +50,16 @@ class World {
         return;
       } else if (this.character.isCollidingEndboss(boss)) {
         boss.angry = true;
-        rewindSong(gamePlaySound);
+        rewindSong();
         this.triggerBossBar = true;
         this.character.blockMoves = true;
         setTimeout(() => {
-          bossBattleSound.play();
+          soundEffects.bossBattleSound.play();
         }, 1000);
         setTimeout(() => {
           boss.angry = false;
           this.character.blockMoves = false;
-          this.endbossSound.play();
+          soundEffects.endbossSound.play();
         }, 1500);
         setTimeout;
       }
@@ -101,7 +96,7 @@ class World {
     if (!this.character.isColliding(enemy) || enemy.energy === 0) return;
 
     if (this.character.isLandingOnTopOf(enemy)) {
-      this.killSound.play();
+      soundEffects.killSound.play();
       enemy.hit(100);
     } else if (this.character.energy !== 0) {
       this.applyCharacterDamage(5);
@@ -116,7 +111,7 @@ class World {
 
   applyCharacterDamage(amount) {
     this.character.hit(amount);
-    this.charHit.play();
+    soundEffects.charHit.play();
     this.statusBar.setPercentage(this.character.energy);
     if (this.character.energy > 15) {
       this.character.pushBack();
@@ -127,7 +122,7 @@ class World {
     for (let i = this.level.coins.length - 1; i >= 0; i--) {
       let coin = this.level.coins[i];
       if (this.character.isCollecting(coin)) {
-        this.coinSound.play();
+        soundEffects.coinSound.play();
         this.level.coins.splice(i, 1);
         this.coinCount = this.coinCount + 1;
         this.coinBar.setCoinAmount(this.coinCount);
@@ -139,7 +134,7 @@ class World {
     for (let i = this.level.bottles.length - 1; i >= 0; i--) {
       let bottle = this.level.bottles[i];
       if (this.character.isCollecting(bottle)) {
-        this.takeSound.play();
+        soundEffects.takeSound.play();
         this.level.bottles.splice(i, 1);
         this.bottleCount = this.bottleCount + 1;
         this.bottleBar.setBottleAmount(this.bottleCount);
@@ -151,10 +146,9 @@ class World {
     for (let i = 0; i < this.throwableObjects.length; i++) {
       let hitter = this.throwableObjects[i];
       if (hitter.hasHit) continue;
-
       if (this.checkEnemyCollision(hitter)) continue;
-
       this.checkEndBossCollision(hitter);
+      soundEffects.fireSound.play();
     }
   }
 
@@ -162,7 +156,7 @@ class World {
     for (let indexEnemy = 0; indexEnemy < this.level.enemies.length; indexEnemy++) {
       let enemy = this.level.enemies[indexEnemy];
       if (hitter.isCollecting(enemy) && enemy.energy !== 0 && !hitter.hasHit) {
-        this.killSound.play();
+        soundEffects.killSound.play();
         enemy.hit(100);
         this.registerHit(hitter);
         return true; // Stop checking once hit
@@ -175,7 +169,7 @@ class World {
     for (let indexEnd = 0; indexEnd < this.level.endBoss.length; indexEnd++) {
       let end = this.level.endBoss[indexEnd];
       if (hitter.isCollecting(end) && end.energy !== 0 && !hitter.hasHit) {
-        this.killSound.play();
+        soundEffects.killSound.play();
         end.hit(20);
         this.bossBar.setPercentage(end.energy);
         this.registerHit(hitter);

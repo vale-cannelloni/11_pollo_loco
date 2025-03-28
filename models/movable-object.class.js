@@ -5,9 +5,6 @@ class MovableObject extends DrawableObject {
   accelleration = 2.5;
   energy = 100;
   lastHit = 0;
-  jumpSound = new Audio(
-    "https://soundfxcenter.com/video-games/new-super-mario-bros/8d82b5_New_Super_Mario_Bros_Jump_Sound_Effect.mp3"
-  );
 
   applyGravity() {
     this.gravityInterval = setInterval(() => {
@@ -16,6 +13,7 @@ class MovableObject extends DrawableObject {
         this.speedY -= this.accelleration;
       }
     }, 1000 / 25);
+    intervalIds.push(this.gravityInterval);
   }
 
   isAboveGround() {
@@ -134,6 +132,6 @@ class MovableObject extends DrawableObject {
 
   jump(jumpSpeed) {
     this.speedY = jumpSpeed;
-    this.jumpSound.play();
+    soundEffects.jumpSound.play();
   }
 }
