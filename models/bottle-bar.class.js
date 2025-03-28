@@ -1,4 +1,12 @@
+/**
+ * Represents the status bar showing the number of collected bottles.
+ * Extends the DrawableObject class to make use of drawing capabilities.
+ */
 class BottleBar extends DrawableObject {
+  /**
+   * Array of image paths representing the different bottle fill states.
+   * @type {string[]}
+   */
   IMAGES_BOTTLE = [
     "media/7_statusbars/1_statusbar/3_statusbar_bottle/blue/0.png",
     "media/7_statusbars/1_statusbar/3_statusbar_bottle/blue/20.png",
@@ -8,8 +16,15 @@ class BottleBar extends DrawableObject {
     "media/7_statusbars/1_statusbar/3_statusbar_bottle/blue/100.png",
   ];
 
+  /**
+   * Current amount of collected bottles (0–10).
+   * @type {number}
+   */
   bottleAmount = 0;
 
+  /**
+   * Creates a new BottleBar instance and initializes its properties.
+   */
   constructor() {
     super();
     this.loadImages(this.IMAGES_BOTTLE);
@@ -20,14 +35,23 @@ class BottleBar extends DrawableObject {
     this.setBottleAmount(0);
   }
 
+  /**
+   * Sets the number of bottles and updates the displayed image accordingly.
+   * @param {number} bottleAmount - The number of bottles collected (0–10).
+   */
   setBottleAmount(bottleAmount) {
     this.bottleAmount = bottleAmount;
-    let path = this.IMAGES_BOTTLE[this.resolveImageBottle(this.bottleAmount)];
+    const path = this.IMAGES_BOTTLE[this.resolveImageBottle(this.bottleAmount)];
     this.img = this.imageCache[path];
   }
 
+  /**
+   * Resolves the appropriate image index based on the bottle amount.
+   * @param {number} bottleAmount - The number of bottles collected.
+   * @returns {number} Index of the corresponding image in IMAGES_BOTTLE.
+   */
   resolveImageBottle(bottleAmount) {
-    if (bottleAmount == 0) {
+    if (bottleAmount === 0) {
       return 0;
     } else if (bottleAmount >= 1 && bottleAmount < 3) {
       return 1;

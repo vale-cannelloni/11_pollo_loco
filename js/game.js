@@ -1,22 +1,68 @@
+/**
+ * Global canvas element used for rendering the game.
+ * @type {HTMLCanvasElement}
+ */
 let canvas;
+
+/**
+ * Represents the current world or screen being rendered.
+ * Could be gameplay, start screen, win screen, etc.
+ * @type {World|StartScreen|GameOverScreen|GameWinScreen}
+ */
 let world;
+
+/**
+ * Keyboard input handler.
+ * @type {Keyboard}
+ */
 let keyboard = new Keyboard();
+
+/**
+ * Indicates whether the keyboard controls are currently active.
+ * @type {boolean}
+ */
 let keyboardActive = true;
+
+/**
+ * Represents the current game state.
+ * Possible values: "start", "playing", "gameover"
+ * @type {string}
+ */
 let gameState = "start";
+
+/**
+ * Prevents rapid restarting when 'R' is pressed.
+ * @type {boolean}
+ */
 let restart = false;
+
+/**
+ * Stores interval IDs so they can be cleared when stopping the game.
+ * @type {number[]}
+ */
 let intervalIds = [];
+
+/**
+ * Indicates whether the game audio is muted.
+ * @type {boolean}
+ */
 let mute = false;
 
+// Prevent default behavior when spacebar is pressed (e.g. page scrolling)
 window.addEventListener("keydown", function (e) {
   if (e.keyCode == 32 && e.target == document.body) {
     e.preventDefault();
   }
 });
 
+// Prevent right-click context menu from appearing
 window.addEventListener("contextmenu", (e) => {
   e.preventDefault();
 });
 
+/**
+ * Handles global keydown events for game start and restart.
+ */
 document.addEventListener("keydown", function (e) {
   if (gameState === "start" && e.key === "Enter") {
     init();
@@ -28,6 +74,9 @@ document.addEventListener("keydown", function (e) {
   }
 });
 
+/**
+ * Initializes the gameplay environment and starts the game.
+ */
 function init() {
   soundEffects.gamePlaySound.play();
   gameState = "playing";
@@ -37,6 +86,9 @@ function init() {
   restart = false;
 }
 
+/**
+ * Initializes the start screen.
+ */
 function initStart() {
   gameState = "start";
   startPlayMobile();
@@ -44,6 +96,9 @@ function initStart() {
   world = new StartScreen(canvas, keyboard);
 }
 
+/**
+ * Initializes the game over screen and plays game over sound.
+ */
 function initOver() {
   restart = false;
   overWinMobile();
@@ -52,6 +107,9 @@ function initOver() {
   soundEffects.gameOverSound.play();
 }
 
+/**
+ * Initializes the game win screen and plays win sound.
+ */
 function initWin() {
   overWinMobile();
   canvas = document.getElementById("canvas");
@@ -59,17 +117,26 @@ function initWin() {
   soundEffects.gameWinSound.play();
 }
 
+/**
+ * Handles mobile-related UI setup during gameplay or game state transitions.
+ */
 function startPlayMobile() {
   blink("blinker", "start", "startGameOverlay");
   blink("blinkerOver", "gameover", "restartGameOverlay");
   showButtons();
 }
 
+/**
+ * Handles mobile-related UI setup for game over or win states.
+ */
 function overWinMobile() {
   blink("blinkerOver", "gameover", "restartGameOverlay");
   showButtons();
 }
 
+/**
+ * Toggles visibility of mobile control buttons based on game state.
+ */
 function showButtons() {
   let mobileButton = document.getElementById("mobileButtons");
   if (!mobileButton) return;
@@ -109,16 +176,6 @@ function stopGame() {
   intervalIds.forEach(clearInterval);
   rewindSong();
 }
-/*
-function setStoppableInterval(fn, time) {
-  let id = setInterval(fn, time);
-  intervalIds.push(id);
-}
-setStoppableInterval(world.run, 500);
-
-function stopGame() {
-  intervalIds.forEach(clearInterval);
-}*/
 
 window.addEventListener("keydown", (e) => {
   if (keyboardActive) {
@@ -251,6 +308,13 @@ function enterFullscreen(el) {
   } else if (el.msRequestFullscreen) {
     el.msRequestFullscreen();
   }
+  setTimeout(resizeCanvasToFullscreen, 100);
+}
+
+function resizeCanvasToFullscreen() {
+  const canvas = document.getElementById("fullscreen");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 }
 
 function exitFullscreen() {
@@ -261,6 +325,11 @@ function exitFullscreen() {
   } else if (document.msExitFullscreen) {
     document.msExitFullscreen();
   }
+  setTimeout(() => {
+    const canvas = document.getElementById("fullscreen");
+    canvas.width = DEFAULT_WIDTH;
+    canvas.height = DEFAULT_HEIGHT;
+  }, 100);
 }
 
 window.addEventListener("orientationchange", function () {

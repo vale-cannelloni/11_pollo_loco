@@ -1,3 +1,24 @@
+/**
+ * @typedef {Object} SoundEffects
+ * @property {HTMLAudioElement} jumpSound - Sound effect for jumping.
+ * @property {HTMLAudioElement} stepsSound - Footstep sound on dirt.
+ * @property {HTMLAudioElement} gameOver - Local fallback sound for game over.
+ * @property {HTMLAudioElement} snoring - Snoring sound, possibly for idle or sleep animation.
+ * @property {HTMLAudioElement} coinSound - Sound effect for collecting a coin.
+ * @property {HTMLAudioElement} killSound - Sound effect for stomping an enemy.
+ * @property {HTMLAudioElement} takeSound - Sound effect for picking up or kicking an item.
+ * @property {HTMLAudioElement} charHit - Sound played when the character is hurt.
+ * @property {HTMLAudioElement} deadBoss - Sound played when the boss is defeated.
+ * @property {HTMLAudioElement} hurtBoss - Sound played when the boss is damaged.
+ * @property {HTMLAudioElement} endbossSound - Background sound for final boss sequence.
+ * @property {HTMLAudioElement} gamePlaySound - Background music during regular gameplay.
+ * @property {HTMLAudioElement} gameOverSound - Background music for game over screen.
+ * @property {HTMLAudioElement} gameWinSound - Sound or music for winning or completing the game.
+ * @property {HTMLAudioElement} bossBattleSound - Background music for boss battles.
+ * @property {HTMLAudioElement} fireSound - Sound effect for lava or fire bubbles.
+ */
+
+/** @type {SoundEffects} */
 let soundEffects = {
   jumpSound: new Audio(
     "https://soundfxcenter.com/video-games/new-super-mario-bros/8d82b5_New_Super_Mario_Bros_Jump_Sound_Effect.mp3"
