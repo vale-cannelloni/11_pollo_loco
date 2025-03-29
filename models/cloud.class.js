@@ -14,7 +14,7 @@ class Cloud extends MovableObject {
     super().loadImage("./media/5_background/layers/4_clouds/1.png");
 
     /** @type {number} X position of the cloud, randomized within a range */
-    this.x = 0 + Math.random() * 720;
+    this.x = 0 + Math.random() * 960;
 
     /** @type {number} Y position of the cloud */
     this.y = 20;

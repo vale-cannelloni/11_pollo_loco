@@ -8,9 +8,9 @@ class StartScreen extends DrawableObject {
   /** @type {number} The y position of the start screen. */
   y = 0;
   /** @type {number} The width of the start screen. */
-  width = 720;
+  width = 960;
   /** @type {number} The height of the start screen. */
-  height = 480;
+  height = 540;
   /** @type {CanvasRenderingContext2D} The 2D rendering context for drawing. */
   ctx;
   /** @type {HTMLCanvasElement} The canvas element the screen is drawn on. */

@@ -4,13 +4,13 @@
  */
 class GameWinScreen extends DrawableObject {
   /** @type {number} The X position of the win screen image. */
-  x = 60;
+  x = 255;
 
   /** @type {number} The Y position of the win screen image. */
-  y = 165;
+  y = 195;
 
   /** @type {number} The width of the win screen image. */
-  width = 600;
+  width = 450;
 
   /** @type {number} The height of the win screen image. */
   height = 150;

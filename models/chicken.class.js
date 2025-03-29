@@ -10,7 +10,7 @@ class Chicken extends MovableObject {
   width = 100;
 
   /** @type {number} The vertical position of the chicken on the canvas. */
-  y = 320;
+  y = 370;
 
   /** @type {number} The vertical offset for the top collision box. */
   offsetYTop = 20;

@@ -35,7 +35,7 @@ class Bottle extends DrawableObject {
      * Fixed position to align with the ground or platform.
      * @type {number}
      */
-    this.y = 325;
+    this.y = 375;
 
     /**
      * The width of the bottle.

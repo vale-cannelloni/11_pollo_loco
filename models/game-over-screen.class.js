@@ -10,10 +10,10 @@ class GameOverScreen extends DrawableObject {
   y = 0;
 
   /** @type {number} Width of the image */
-  width = 720;
+  width = 960;
 
   /** @type {number} Height of the image */
-  height = 480;
+  height = 540;
 
   /** @type {CanvasRenderingContext2D} Rendering context of the canvas */
   ctx;

@@ -7,13 +7,13 @@ class BackgroundObject extends MovableObject {
    * The height of the background object.
    * @type {number}
    */
-  height = 480;
+  height = 540;
 
   /**
    * The width of the background object.
    * @type {number}
    */
-  width = 720;
+  width = 960;
 
   /**
    * Creates a new BackgroundObject.
@@ -29,6 +29,6 @@ class BackgroundObject extends MovableObject {
      * Positioned based on canvas height minus object height.
      * @type {number}
      */
-    this.y = 480 - this.height;
+    this.y = 540 - this.height;
   }
 }

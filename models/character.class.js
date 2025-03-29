@@ -1,12 +1,20 @@
+/**
+ * Initializes and returns a new Character instance.
+ * @returns {Character} A new Character object.
+ */
 function initCharacter() {
   return new Character();
 }
 
+/**
+ * Represents the player-controlled character.
+ * Inherits movement and animation capabilities from MovableObject.
+ */
 class Character extends MovableObject {
   height = 300;
   width = 150;
-  y = 120;
-  x = 50;
+  y = 172;
+  x = 25;
   speed = 5;
   offsetYTop = 100;
   offsetX = 50;
@@ -17,6 +25,10 @@ class Character extends MovableObject {
   deathAnimationPlayed = false;
   deathImage = new Image();
 
+  /**
+   * Walking animation frames
+   * @type {string[]}
+   */
   IMAGES_WALKING = [
     "./media/2_character_pepe/2_walk/W-21.png",
     "./media/2_character_pepe/2_walk/W-22.png",
@@ -25,6 +37,11 @@ class Character extends MovableObject {
     "./media/2_character_pepe/2_walk/W-25.png",
     "./media/2_character_pepe/2_walk/W-26.png",
   ];
+
+  /**
+   * Jumping animation frames
+   * @type {string[]}
+   */
   IMAGES_JUMPING = [
     "./media/2_character_pepe/3_jump/J-31.png",
     "./media/2_character_pepe/3_jump/J-32.png",
@@ -37,6 +54,10 @@ class Character extends MovableObject {
     "./media/2_character_pepe/3_jump/J-39.png",
   ];
 
+  /**
+   * Death animation frames
+   * @type {string[]}
+   */
   IMAGES_DEAD = [
     "./media/2_character_pepe/5_dead/D-51.png",
     "./media/2_character_pepe/5_dead/D-52.png",
@@ -46,12 +67,20 @@ class Character extends MovableObject {
     "./media/2_character_pepe/5_dead/D-56.png",
   ];
 
+  /**
+   * Hurt animation frames
+   * @type {string[]}
+   */
   IMAGES_HURT = [
     "./media/2_character_pepe/4_hurt/H-41.png",
     "./media/2_character_pepe/4_hurt/H-42.png",
     "./media/2_character_pepe/4_hurt/H-43.png",
   ];
 
+  /**
+   * Idle animation frames
+   * @type {string[]}
+   */
   IMAGES_IDLE = [
     "./media/2_character_pepe/1_idle/idle/I-1.png",
     "./media/2_character_pepe/1_idle/idle/I-2.png",
@@ -65,6 +94,10 @@ class Character extends MovableObject {
     "./media/2_character_pepe/1_idle/idle/I-10.png",
   ];
 
+  /**
+   * Long idle animation frames
+   * @type {string[]}
+   */
   IMAGES_LONG_IDLE = [
     "./media/2_character_pepe/1_idle/long_idle/I-11.png",
     "./media/2_character_pepe/1_idle/long_idle/I-12.png",
@@ -79,6 +112,10 @@ class Character extends MovableObject {
   ];
 
   world;
+
+  /**
+   * Creates a new Character, loads animations and starts behavior loops.
+   */
   constructor() {
     super().loadImage("./media/2_character_pepe/2_walk/W-21.png");
     this.loadImages(this.IMAGES_WALKING);
@@ -89,15 +126,21 @@ class Character extends MovableObject {
     this.loadImages(this.IMAGES_LONG_IDLE);
 
     this.animate();
-
     this.applyGravity();
   }
+
+  /**
+   * Starts the animation and movement loops.
+   */
   animate() {
     this.lastActivityTime = Date.now();
     this.startMovementLoop();
     this.startAnimationLoop();
   }
 
+  /**
+   * Continuously checks and applies user input and updates the camera.
+   */
   startMovementLoop() {
     let movementLoop = setInterval(() => {
       this.handleMovementInput();
@@ -107,6 +150,9 @@ class Character extends MovableObject {
     intervalIds.push(movementLoop);
   }
 
+  /**
+   * Handles horizontal movement based on keyboard input.
+   */
   handleMovementInput() {
     if (
       (this.world.keyboard.RIGHT || this.world.keyboard.D) &&
@@ -123,16 +169,25 @@ class Character extends MovableObject {
     }
   }
 
+  /**
+   * Triggers a jump if allowed and on the ground.
+   */
   handleJump() {
     if (this.world.keyboard.SPACE && !this.isAboveGround() && this.blockMovesVar()) {
       this.jump(30);
     }
   }
 
+  /**
+   * Updates camera position relative to character position.
+   */
   updateCameraPosition() {
     this.world.camera_x = -this.x + 100;
   }
 
+  /**
+   * Determines which animation to play based on character state.
+   */
   startAnimationLoop() {
     let animationLoop = setInterval(() => {
       let now = Date.now();
@@ -161,32 +216,50 @@ class Character extends MovableObject {
     intervalIds.push(animationLoop);
   }
 
+  /**
+   * Plays jump animation and updates activity time.
+   * @param {number} now - The current timestamp.
+   */
   playJumpAnimation(now) {
     this.playAnimation(this.IMAGES_JUMPING);
     this.lastActivityTime = now;
   }
 
+  /**
+   * Plays hurt animation and updates activity time.
+   * @param {number} now - The current timestamp.
+   */
   playHurtAnimation(now) {
     this.playAnimation(this.IMAGES_HURT);
     this.lastActivityTime = now;
   }
 
+  /**
+   * Returns true if any movement keys are being pressed.
+   * @returns {boolean}
+   */
   isMoving() {
     return (
       this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.D || this.world.keyboard.A
     );
   }
 
+  /**
+   * Plays walking animation and footstep sound.
+   * @param {number} now - The current timestamp.
+   */
   playWalkingAnimation(now) {
     this.playAnimation(this.IMAGES_WALKING);
     soundEffects.stepsSound.play();
     this.lastActivityTime = now;
   }
 
+  /**
+   * Handles the character's death animation and game over transition.
+   */
   playDeathSequence() {
     restart = true;
     rewindSong();
-
     soundEffects.gameOver.play();
 
     if (!this.deathStarted) {
@@ -204,19 +277,21 @@ class Character extends MovableObject {
     }
   }
 
+  /**
+   * Plays long idle (snoring) animation and sound effect.
+   */
   playLongIdleAnimation() {
     this.playAnimation(this.IMAGES_LONG_IDLE);
     soundEffects.snoring.play();
   }
 
+  /**
+   * Checks whether character movement is currently allowed.
+   * @returns {boolean}
+   */
   blockMovesVar() {
-    if (
-      !this.isBeingPushedBack &&
-      !this.isDead() &&
-      !this.blockMoves &&
-      !this.world.levelEndboss.hasPlayedDead
-    ) {
-      return true;
-    }
+    return (
+      !this.isBeingPushedBack && !this.isDead() && !this.blockMoves && !this.world.levelEndboss.hasPlayedDead
+    );
   }
 }
