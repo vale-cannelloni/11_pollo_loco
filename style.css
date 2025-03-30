@@ -104,7 +104,7 @@ canvas {
   position: absolute;
   top: 5px;
   right: 5px;
-  background-color: transparent;
+  background-color: rgb(255, 94, 0);
   border-radius: 100%;
   padding: 0;
   display: flex;
@@ -122,7 +122,7 @@ canvas {
   position: absolute;
   bottom: 5px;
   right: 5px;
-  background-color: transparent;
+  background-color: rgb(255, 94, 0);
   border-radius: 100%;
   padding: 8px;
   display: flex;
@@ -151,13 +151,13 @@ canvas {
   }
 }
 
-@media only screen and (max-width: 960px) {
+@media only screen and (max-width: 1280px) {
   canvas {
     width: 100%;
   }
 }
 
-@media only screen and (max-height: 540px) {
+@media only screen and (max-height: 720px) {
   canvas {
     height: 100vh;
   }
@@ -180,12 +180,26 @@ canvas {
   }
 }
 
-@media (max-width: 400px) and (max-height: 300px) {
+@media (max-width: 550px) {
   .actionButtons,
   .moveButtons {
     button {
       width: 40px;
       height: 40px;
+    }
+  }
+
+  .soundMenu,
+  .screenFull {
+    height: 40px;
+    width: 40px;
+  }
+
+  .startGameOverlay,
+  .restartGameOverlay {
+    p {
+      font-size: 36px;
+      margin-top: 100px;
     }
   }
 }
