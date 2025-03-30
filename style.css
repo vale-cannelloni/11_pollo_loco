@@ -11,7 +11,6 @@
 
 html {
   background-color: rgb(203, 91, 0);
-  touch-action: manipulation;
 }
 .d_none {
   display: none;
@@ -100,40 +99,32 @@ canvas {
   }
 }
 
-.soundMenu {
+.soundMenu,
+.screenFull {
   position: absolute;
-  top: 5px;
-  right: 5px;
   background-color: rgb(255, 94, 0);
   border-radius: 100%;
-  padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 60px;
-  width: 60px;
+  height: 40px;
+  width: 40px;
   img {
     height: 100%;
     width: 100%;
   }
 }
 
+.soundMenu {
+  top: 5px;
+  right: 5px;
+  padding: 0;
+}
+
 .screenFull {
-  position: absolute;
   bottom: 5px;
   right: 5px;
-  background-color: rgb(255, 94, 0);
-  border-radius: 100%;
   padding: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 60px;
-  width: 60px;
-  img {
-    height: 100%;
-    width: 100%;
-  }
 }
 
 .impressumButton {
@@ -151,7 +142,7 @@ canvas {
   }
 }
 
-@media only screen and (max-width: 1280px) {
+@media only screen and (max-width: 720px) {
   canvas {
     width: 100%;
   }
@@ -167,6 +158,10 @@ canvas {
   .gameInstructions {
     display: none;
   }
+
+  .webNav {
+    display: none;
+  }
   .mobileButtons {
     top: 70%;
     display: flex;
@@ -174,9 +169,6 @@ canvas {
   }
   body {
     overflow-y: hidden;
-  }
-  .screenFull {
-    display: none;
   }
 }
 
