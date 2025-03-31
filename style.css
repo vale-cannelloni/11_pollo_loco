@@ -15,8 +15,6 @@
 
 html {
   background-color: orangered;
-  pointer-events: none;
-  user-select: none;
 }
 
 body {
