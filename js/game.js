@@ -42,11 +42,9 @@ let restart = false;
  */
 let intervalIds = [];
 
-/**
- * Indicates whether the game audio is muted.
- * @type {boolean}
- */
-let mute = false;
+let savedMute = localStorage.getItem("mute");
+
+let mute = savedMute === "true";
 
 // Prevent default behavior when spacebar is pressed (e.g. page scrolling)
 window.addEventListener("keydown", function (e) {
@@ -90,6 +88,11 @@ function init() {
  * Initializes the start screen.
  */
 function initStart() {
+  for (let key in soundEffects) {
+    if (soundEffects[key] instanceof Audio) {
+      soundEffects[key].volume = mute ? 0 : 1;
+    }
+  }
   gameState = "start";
   startPlayMobile();
   canvas = document.getElementById("canvas");
@@ -158,6 +161,7 @@ function rewindSong() {
 
 function muteSound() {
   mute = !mute;
+  localStorage.setItem("mute", mute);
   for (let key in soundEffects) {
     if (soundEffects[key] instanceof Audio) {
       soundEffects[key].volume = mute ? 0 : 1;
@@ -332,6 +336,7 @@ function exitFullscreen() {
   }, 100);
 }
 
+/*
 window.addEventListener("orientationchange", function () {
   let orientation =
     (window.screen.orientation || {}).type || window.screen.mozOrientation || window.screen.msOrientation;
@@ -341,4 +346,4 @@ window.addEventListener("orientationchange", function () {
   } else if (orientation === undefined) {
     console.log("The orientation API isn't supported in this browser :(");
   }
-});
+});*/
