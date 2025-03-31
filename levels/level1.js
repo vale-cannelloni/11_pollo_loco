@@ -44,11 +44,11 @@ function initLevel() {
      * @type {Coin[]} Array of Coin instances placed at specific coordinates.
      */
     [
-      new Coin("media/8_coin/coin_2.png", 100, 300),
-      new Coin("media/8_coin/coin_1.png", 400, 300),
-      new Coin("media/8_coin/coin_2.png", 700, 300),
-      new Coin("media/8_coin/coin_1.png", 900, 300),
-      new Coin("media/8_coin/coin_2.png", 1000, 300),
+      new Coin("media/8_coin/coin_2.png", 1, 300),
+      new Coin("media/8_coin/coin_1.png", 200, 300),
+      new Coin("media/8_coin/coin_2.png", 500, 300),
+      new Coin("media/8_coin/coin_1.png", 700, 300),
+      new Coin("media/8_coin/coin_2.png", 800, 300),
     ],
 
     /**
