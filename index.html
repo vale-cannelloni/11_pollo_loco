@@ -50,12 +50,6 @@
         <div id="restartGameOverlay" class="restartGameOverlay" onclick="init()">
           <p id="blinkerOver">Press R or DISPLAY to restart</p>
         </div>
-        <button id="soundMute" class="soundMenu" onclick="muteSound(), this.blur()">
-          <img src="./media/images/soundMenu.png" alt="sound menu button" />
-        </button>
-        <button id="screenFull" class="screenFull" onclick="toggleFullscreen(), this.blur()">
-          <img src="./media/images/full_screen.png" alt="fullscreen button" />
-        </button>
 
         <div id="mobileButtons" class="mobileButtons">
           <div class="actionButtons">
@@ -91,6 +85,15 @@
             </button>
           </div>
         </div>
+        <div id="landscapeOverlay" class="landscapeOverlay">
+          <p>Turn device sideways for best gaming experience!</p>
+        </div>
+        <button id="soundMute" class="soundMenu" onclick="muteSound(), this.blur()">
+          <img src="./media/images/soundMenu.png" alt="sound menu button" />
+        </button>
+        <button id="screenFull" class="screenFull" onclick="toggleFullscreen(), this.blur()">
+          <img src="./media/images/full_screen.png" alt="fullscreen button" />
+        </button>
       </div>
     </div>
 

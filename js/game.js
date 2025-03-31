@@ -6,7 +6,6 @@ let canvas;
 
 /**
  * Represents the current world or screen being rendered.
- * Could be gameplay, start screen, win screen, etc.
  * @type {World|StartScreen|GameOverScreen|GameWinScreen}
  */
 let world;
@@ -18,7 +17,7 @@ let world;
 let keyboard = new Keyboard();
 
 /**
- * Indicates whether the keyboard controls are currently active.
+ * Indicates whether keyboard controls are currently active.
  * @type {boolean}
  */
 let keyboardActive = true;
@@ -31,35 +30,53 @@ let keyboardActive = true;
 let gameState = "start";
 
 /**
- * Prevents rapid restarting when 'R' is pressed.
+ * Prevents rapid restart when 'R' is pressed.
  * @type {boolean}
  */
 let restart = false;
 
 /**
- * Stores interval IDs so they can be cleared when stopping the game.
+ * Stores interval IDs to allow clearing on game stop.
  * @type {number[]}
  */
 let intervalIds = [];
 
+/**
+ * Mute preference loaded from localStorage.
+ * @type {boolean}
+ */
 let savedMute = localStorage.getItem("mute");
 
+/**
+ * Controls whether audio is muted.
+ * @type {boolean}
+ */
 let mute = savedMute === "true";
 
-// Prevent default behavior when spacebar is pressed (e.g. page scrolling)
+/**
+ * Checks status of screen.
+ * @type {string}
+ */
+let mediaQuery = window.matchMedia("(orientation: portrait)");
+
+/**
+ * Prevent spacebar from scrolling the page.
+ */
 window.addEventListener("keydown", function (e) {
-  if (e.keyCode == 32 && e.target == document.body) {
+  if (e.keyCode === 32 && e.target === document.body) {
     e.preventDefault();
   }
 });
 
-// Prevent right-click context menu from appearing
+/**
+ * Disable right-click context menu.
+ */
 window.addEventListener("contextmenu", (e) => {
   e.preventDefault();
 });
 
 /**
- * Handles global keydown events for game start and restart.
+ * Global keydown handler for starting/restarting the game.
  */
 document.addEventListener("keydown", function (e) {
   if (gameState === "start" && e.key === "Enter") {
@@ -73,7 +90,85 @@ document.addEventListener("keydown", function (e) {
 });
 
 /**
- * Initializes the gameplay environment and starts the game.
+ * Sets key flags to true when keys are pressed.
+ */
+window.addEventListener("keydown", (e) => {
+  if (!keyboardActive) return;
+  switch (e.keyCode) {
+    case 37:
+      keyboard.LEFT = true;
+      break;
+    case 38:
+      keyboard.UP = true;
+      break;
+    case 39:
+      keyboard.RIGHT = true;
+      break;
+    case 40:
+      keyboard.DOWN = true;
+      break;
+    case 32:
+      keyboard.SPACE = true;
+      break;
+    case 87:
+      keyboard.W = true;
+      break;
+    case 65:
+      keyboard.A = true;
+      break;
+    case 83:
+      keyboard.S = true;
+      break;
+    case 68:
+      keyboard.D = true;
+      break;
+    case 70:
+      keyboard.F = true;
+      break;
+  }
+});
+
+/**
+ * Sets key flags to false when keys are released.
+ */
+window.addEventListener("keyup", (e) => {
+  if (!keyboardActive) return;
+  switch (e.keyCode) {
+    case 37:
+      keyboard.LEFT = false;
+      break;
+    case 38:
+      keyboard.UP = false;
+      break;
+    case 39:
+      keyboard.RIGHT = false;
+      break;
+    case 40:
+      keyboard.DOWN = false;
+      break;
+    case 32:
+      keyboard.SPACE = false;
+      break;
+    case 87:
+      keyboard.W = false;
+      break;
+    case 65:
+      keyboard.A = false;
+      break;
+    case 83:
+      keyboard.S = false;
+      break;
+    case 68:
+      keyboard.D = false;
+      break;
+    case 70:
+      keyboard.F = false;
+      break;
+  }
+});
+
+/**
+ * Initializes the game and switches to the gameplay screen.
  */
 function init() {
   soundEffects.gamePlaySound.play();
@@ -85,9 +180,11 @@ function init() {
 }
 
 /**
- * Initializes the start screen.
+ * Initializes and displays the start screen.
  */
 function initStart() {
+  handleOrientationChange(mediaQuery);
+
   for (let key in soundEffects) {
     if (soundEffects[key] instanceof Audio) {
       soundEffects[key].volume = mute ? 0 : 1;
@@ -100,7 +197,7 @@ function initStart() {
 }
 
 /**
- * Initializes the game over screen and plays game over sound.
+ * Initializes and displays the game over screen.
  */
 function initOver() {
   restart = false;
@@ -111,7 +208,7 @@ function initOver() {
 }
 
 /**
- * Initializes the game win screen and plays win sound.
+ * Initializes and displays the win screen.
  */
 function initWin() {
   overWinMobile();
@@ -121,7 +218,7 @@ function initWin() {
 }
 
 /**
- * Handles mobile-related UI setup during gameplay or game state transitions.
+ * Sets up mobile controls and screen overlays during play.
  */
 function startPlayMobile() {
   blink("blinker", "start", "startGameOverlay");
@@ -130,7 +227,7 @@ function startPlayMobile() {
 }
 
 /**
- * Handles mobile-related UI setup for game over or win states.
+ * Sets up mobile overlays and buttons for endgame states.
  */
 function overWinMobile() {
   blink("blinkerOver", "gameover", "restartGameOverlay");
@@ -138,18 +235,17 @@ function overWinMobile() {
 }
 
 /**
- * Toggles visibility of mobile control buttons based on game state.
+ * Shows or hides mobile control buttons based on game state.
  */
 function showButtons() {
-  let mobileButton = document.getElementById("mobileButtons");
+  const mobileButton = document.getElementById("mobileButtons");
   if (!mobileButton) return;
-  if (gameState === "playing") {
-    mobileButton.style.visibility = "visible";
-  } else {
-    mobileButton.style.visibility = "hidden";
-  }
+  mobileButton.style.visibility = gameState === "playing" ? "visible" : "hidden";
 }
 
+/**
+ * Stops all playing audio and rewinds to start.
+ */
 function rewindSong() {
   for (let key in soundEffects) {
     if (soundEffects[key] instanceof Audio) {
@@ -159,6 +255,9 @@ function rewindSong() {
   }
 }
 
+/**
+ * Toggles sound on/off and saves setting in localStorage.
+ */
 function muteSound() {
   mute = !mute;
   localStorage.setItem("mute", mute);
@@ -169,6 +268,9 @@ function muteSound() {
   }
 }
 
+/**
+ * Restarts the game after a short delay.
+ */
 function startGame() {
   restart = true;
   setTimeout(() => {
@@ -176,112 +278,54 @@ function startGame() {
   }, 500);
 }
 
+/**
+ * Stops the game by clearing intervals and audio.
+ */
 function stopGame() {
   intervalIds.forEach(clearInterval);
   rewindSong();
 }
 
-window.addEventListener("keydown", (e) => {
-  if (keyboardActive) {
-    let key = e.keyCode;
-    if (key == 37) {
-      keyboard.LEFT = true;
-    }
-    if (key == 38) {
-      keyboard.UP = true;
-    }
-    if (key == 39) {
-      keyboard.RIGHT = true;
-    }
-    if (key == 40) {
-      keyboard.DOWN = true;
-    }
-    if (key == 32) {
-      keyboard.SPACE = true;
-    }
-    if (key == 87) {
-      keyboard.W = true;
-    }
-    if (key == 65) {
-      keyboard.A = true;
-    }
-    if (key == 83) {
-      keyboard.S = true;
-    }
-    if (key == 68) {
-      keyboard.D = true;
-    }
-    if (key == 70) {
-      keyboard.F = true;
-    }
-  }
-});
-
-window.addEventListener("keyup", (e) => {
-  if (keyboardActive) {
-    let key = e.keyCode;
-    if (key == 37) {
-      keyboard.LEFT = false;
-    }
-    if (key == 38) {
-      keyboard.UP = false;
-    }
-    if (key == 39) {
-      keyboard.RIGHT = false;
-    }
-    if (key == 40) {
-      keyboard.DOWN = false;
-    }
-    if (key == 32) {
-      keyboard.SPACE = false;
-    }
-    if (key == 87) {
-      keyboard.W = false;
-    }
-    if (key == 65) {
-      keyboard.A = false;
-    }
-    if (key == 83) {
-      keyboard.S = false;
-    }
-    if (key == 68) {
-      keyboard.D = false;
-    }
-    if (key == 70) {
-      keyboard.F = false;
-    }
-  }
-});
-
+/**
+ * Simulates a keydown event for the specified key code.
+ * @param {number} keyCode
+ */
 function simulateKeyDown(keyCode) {
   let event = new KeyboardEvent("keydown", {
     bubbles: true,
     cancelable: true,
   });
-
   Object.defineProperty(event, "keyCode", { value: keyCode });
   Object.defineProperty(event, "which", { value: keyCode });
-
   document.dispatchEvent(event);
 }
 
+/**
+ * Simulates a keyup event for the specified key code.
+ * @param {number} keyCode
+ */
 function simulateKeyUp(keyCode) {
   let event = new KeyboardEvent("keyup", {
     bubbles: true,
     cancelable: true,
   });
-
   Object.defineProperty(event, "keyCode", { value: keyCode });
   Object.defineProperty(event, "which", { value: keyCode });
-
   document.dispatchEvent(event);
 }
 
+/**
+ * Creates a blinking effect on a given element while in the specified game state.
+ * @param {string} blinkerId - The ID of the blinking element.
+ * @param {string} state - The game state during which to blink.
+ * @param {string} overlayId - The ID of the overlay element.
+ */
 function blink(blinkerId, state, overlayId) {
   let blinker = document.getElementById(blinkerId);
   let overlay = document.getElementById(overlayId);
   overlay.style.visibility = "visible";
-  if (gameState == state) {
+
+  if (gameState === state) {
     blinker.style.visibility = "hidden";
     setTimeout(() => {
       blinker.style.visibility = "visible";
@@ -295,6 +339,9 @@ function blink(blinkerId, state, overlayId) {
   }
 }
 
+/**
+ * Toggles between fullscreen and normal mode.
+ */
 function toggleFullscreen() {
   let elem = document.getElementById("fullscreen");
   if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
@@ -304,6 +351,10 @@ function toggleFullscreen() {
   }
 }
 
+/**
+ * Enters fullscreen mode for a given element.
+ * @param {HTMLElement} el
+ */
 function enterFullscreen(el) {
   if (el.requestFullscreen) {
     el.requestFullscreen();
@@ -315,12 +366,18 @@ function enterFullscreen(el) {
   setTimeout(resizeCanvasToFullscreen, 100);
 }
 
+/**
+ * Resizes the canvas to match fullscreen window size.
+ */
 function resizeCanvasToFullscreen() {
   const canvas = document.getElementById("fullscreen");
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 }
 
+/**
+ * Exits fullscreen mode and resets canvas to default size.
+ */
 function exitFullscreen() {
   if (document.exitFullscreen) {
     document.exitFullscreen();
@@ -336,14 +393,14 @@ function exitFullscreen() {
   }, 100);
 }
 
-/*
-window.addEventListener("orientationchange", function () {
-  let orientation =
-    (window.screen.orientation || {}).type || window.screen.mozOrientation || window.screen.msOrientation;
-
-  if (["landscape-primary", "landscape-secondary"].includes(orientation)) {
-    toggleFullscreen();
-  } else if (orientation === undefined) {
-    console.log("The orientation API isn't supported in this browser :(");
+function handleOrientationChange(e) {
+  let landscape = document.getElementById("landscapeOverlay");
+  let portrait = e.matches;
+  if (portrait) {
+    landscape.style.display = "block";
+  } else {
+    landscape.style.display = "none";
   }
-});*/
+}
+
+mediaQuery.addEventListener("change", handleOrientationChange);

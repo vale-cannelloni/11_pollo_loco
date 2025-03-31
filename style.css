@@ -26,6 +26,19 @@ body {
   margin: 0;
 }
 
+.impressum {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  h1,
+  h2,
+  p,
+  a {
+    margin: 8px;
+  }
+}
+
 .alignment {
   position: relative;
   display: flex;
@@ -72,6 +85,7 @@ canvas {
     align-items: center;
     justify-content: center;
     background-color: orange;
+    cursor: pointer;
   }
   img {
     width: 100%;
@@ -80,7 +94,8 @@ canvas {
 }
 
 .startGameOverlay,
-.restartGameOverlay {
+.restartGameOverlay,
+.landscapeOverlay {
   position: absolute;
   height: 100%;
   width: 100%;
@@ -99,6 +114,13 @@ canvas {
   }
 }
 
+.landscapeOverlay {
+  background-color: rgba(0, 0, 0, 0.705);
+  p {
+    margin-top: 50px;
+  }
+}
+
 .soundMenu,
 .screenFull {
   position: absolute;
@@ -109,6 +131,7 @@ canvas {
   align-items: center;
   height: 40px;
   width: 40px;
+  cursor: pointer;
   img {
     height: 100%;
     width: 100%;
@@ -148,7 +171,7 @@ canvas {
   }
 }
 
-@media only screen and (max-height: 720px) {
+@media only screen and (max-height: 480px) and (max-width: 720px) {
   canvas {
     height: 100vh;
   }
@@ -172,6 +195,23 @@ canvas {
   }
 }
 
+@media (max-width: 600px) {
+  .impressum {
+    h1 {
+      font-size: 40px;
+    }
+    h2 {
+      font-size: 40px;
+    }
+    p {
+      font-size: 24px;
+    }
+    a {
+      font-size: 40px;
+    }
+  }
+}
+
 @media (max-width: 550px) {
   .actionButtons,
   .moveButtons {
@@ -188,7 +228,8 @@ canvas {
   }
 
   .startGameOverlay,
-  .restartGameOverlay {
+  .restartGameOverlay,
+  .landscapeOverlay {
     p {
       font-size: 36px;
       margin-top: 100px;
