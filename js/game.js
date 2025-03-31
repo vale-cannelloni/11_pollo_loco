@@ -184,7 +184,6 @@ function init() {
  */
 function initStart() {
   handleOrientationChange(mediaQuery);
-
   for (let key in soundEffects) {
     if (soundEffects[key] instanceof Audio) {
       soundEffects[key].volume = mute ? 0 : 1;
@@ -395,6 +394,7 @@ function exitFullscreen() {
 
 /**
  * Checks whether device is in landscape or portrait mode on page load.
+ *  * @param {HTMLElement} e
  */
 function handleOrientationChange(e) {
   let landscape = document.getElementById("landscapeOverlay");
