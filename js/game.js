@@ -60,6 +60,18 @@ let mute = savedMute === "true";
 let mediaQuery = window.matchMedia("(orientation: portrait)");
 
 /**
+ * Standard canvas width.
+ * @type {number}
+ */
+const DEFAULT_WIDTH = 960;
+
+/**
+ * Standard canvas height.
+ * @type {number}
+ */
+const DEFAULT_HEIGHT = 540;
+
+/**
  * Prevent spacebar from scrolling the page.
  */
 window.addEventListener("keydown", function (e) {
@@ -184,6 +196,7 @@ function init() {
  */
 function initStart() {
   handleOrientationChange(mediaQuery);
+  detectMobile();
   for (let key in soundEffects) {
     if (soundEffects[key] instanceof Audio) {
       soundEffects[key].volume = mute ? 0 : 1;
@@ -368,10 +381,24 @@ function enterFullscreen(el) {
 /**
  * Resizes the canvas to match fullscreen window size.
  */
+function enterFullscreen(el) {
+  if (el.requestFullscreen) {
+    el.requestFullscreen();
+  } else if (el.webkitRequestFullscreen) {
+    el.webkitRequestFullscreen();
+  } else if (el.msRequestFullscreen) {
+    el.msRequestFullscreen();
+  }
+  setTimeout(resizeCanvasToFullscreen, 100);
+}
+
+/**
+ * Resizes the canvas to match fullscreen window size.
+ */
 function resizeCanvasToFullscreen() {
-  const canvas = document.getElementById("fullscreen");
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  let canvasGame = document.getElementById("fullscreen");
+  canvasGame.width = window.innerWidth;
+  canvasGame.height = window.innerHeight;
 }
 
 /**
@@ -386,12 +413,11 @@ function exitFullscreen() {
     document.msExitFullscreen();
   }
   setTimeout(() => {
-    const canvas = document.getElementById("fullscreen");
-    canvas.width = DEFAULT_WIDTH;
-    canvas.height = DEFAULT_HEIGHT;
+    let canvasGame = document.getElementById("fullscreen");
+    canvasGame.width = DEFAULT_WIDTH;
+    canvasGame.height = DEFAULT_HEIGHT;
   }, 100);
 }
-
 /**
  * Checks whether device is in landscape or portrait mode on page load.
  *  * @param {HTMLElement} e
@@ -410,3 +436,23 @@ function handleOrientationChange(e) {
  * Event listener checking on change of screen whether landscape or portrait mode is selected.
  */
 mediaQuery.addEventListener("change", handleOrientationChange);
+
+/**
+ * Checks whether the user is on a mobile device based on the user agent string.
+ *
+ * @returns {boolean} True if the user is on a mobile device, false otherwise.
+ */
+function isMobileDevice() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+/**
+ * Detects on initStart() whether user is on mobile device or not
+ */
+function detectMobile() {
+  if (isMobileDevice()) {
+    console.log("User is on a mobile device");
+  } else {
+    console.log("User is on a desktop or non-mobile device");
+  }
+}

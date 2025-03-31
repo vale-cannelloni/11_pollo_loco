@@ -25,7 +25,7 @@ let soundEffects = {
   gameOver: new Audio("./media/sound/no_energy.wav"),
   snoring: new Audio("media/sound/snoring.wav"),
   coinSound: new Audio("./media/sound/coin.wav"),
-  killSound: new Audio("./media/sound/bottle_break.wav"),
+  killSound: new Audio("./media/sound/bottle_hit.ogg"),
   takeSound: new Audio("./media/sound/take.wav"),
   charHit: new Audio("./media/sound/playerhit.mp3"),
   deadBoss: new Audio("./media/sound/chicken.wav"),
