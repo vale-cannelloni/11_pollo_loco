@@ -40,7 +40,7 @@
     <script src="./js/game.js"></script>
   </head>
   <body onload="initStart()">
-    <h1>El Pollo Loco</h1>
+    <h1 id="gameTitle">El Pollo Loco</h1>
     <div id="fullscreen">
       <div class="alignment">
         <canvas id="canvas" width="960" height="540"></canvas>
@@ -95,7 +95,7 @@
       </div>
     </div>
 
-    <div class="gameInstructions">
+    <div id="gameInstructions" class="gameInstructions">
       <p>ENTER = Start game // R = Restart</p>
       <p>&#8678; , A = Walk left // &#8680; , D = Walk right</p>
       <p>SPACE = Jump // F = Throw bottle</p>

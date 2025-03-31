@@ -9,11 +9,14 @@
   font-size: 56px;
 }
 
-html {
-  background-color: rgb(203, 91, 0);
-}
 .d_none {
   display: none;
+}
+
+html {
+  background-color: orangered;
+  pointer-events: none;
+  user-select: none;
 }
 
 body {
@@ -25,6 +28,7 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   margin: 0;
+  padding: 0;
 }
 
 .impressum {
@@ -67,7 +71,6 @@ canvas {
   position: absolute;
   top: 50%;
   width: 100%;
-  height: 80%;
   display: none;
 }
 
@@ -147,8 +150,8 @@ canvas {
 }
 
 .screenFull {
-  bottom: 5px;
-  right: 5px;
+  top: 5px;
+  right: 50px;
   padding: 8px;
 }
 
@@ -164,7 +167,7 @@ canvas {
   border-style: none;
   z-index: 1;
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   font-size: 20px;
 
@@ -197,9 +200,13 @@ canvas {
 
 @media only screen and (max-height: 1050px) and (max-width: 1400px) {
   .mobileButtons {
-    top: 70%;
+    top: 80%;
     display: flex;
     justify-content: space-between;
+  }
+
+  h1 {
+    margin: 0;
   }
 }
 
@@ -207,21 +214,20 @@ canvas {
   canvas {
     height: 100vh;
   }
+
+  .webNav {
+    display: none;
+  }
+
+  body {
+    overflow-y: hidden;
+  }
+
   h1 {
     display: none;
   }
   .gameInstructions {
     display: none;
-  }
-
-  .webNav {
-    display: none;
-  }
-  .mobileButtons {
-    top: 70%;
-  }
-  body {
-    overflow-y: hidden;
   }
 }
 
@@ -262,7 +268,4 @@ canvas {
       margin-top: 100px;
     }
   }
-}
-
-@media (pointer: coarse) {
 }

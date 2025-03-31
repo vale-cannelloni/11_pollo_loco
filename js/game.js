@@ -450,8 +450,11 @@ function isMobileDevice() {
  * Detects on initStart() whether user is on mobile device or not
  */
 function detectMobile() {
+  let mobileTitle = document.getElementById("gameTitle");
+  let mobileInstructions = document.getElementById("gameInstructions");
   if (isMobileDevice()) {
-    console.log("User is on a mobile device");
+    mobileInstructions.style.display = "none";
+    mobileTitle.style.display = "none";
   } else {
     console.log("User is on a desktop or non-mobile device");
   }
