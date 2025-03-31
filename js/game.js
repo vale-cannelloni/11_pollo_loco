@@ -393,6 +393,9 @@ function exitFullscreen() {
   }, 100);
 }
 
+/**
+ * Checks whether device is in landscape or portrait mode on page load.
+ */
 function handleOrientationChange(e) {
   let landscape = document.getElementById("landscapeOverlay");
   let portrait = e.matches;
@@ -403,4 +406,7 @@ function handleOrientationChange(e) {
   }
 }
 
+/**
+ * Event listener checking on change of screen whether landscape or portrait mode is selected.
+ */
 mediaQuery.addEventListener("change", handleOrientationChange);
