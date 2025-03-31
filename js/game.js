@@ -455,7 +455,5 @@ function detectMobile() {
   if (isMobileDevice()) {
     mobileInstructions.style.display = "none";
     mobileTitle.style.display = "none";
-  } else {
-    console.log("User is on a desktop or non-mobile device");
   }
 }
